@@ -1,0 +1,41 @@
+.compact-video-container {
+  width: 400px;
+  background-color: transparent;
+  border: none;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 5px;
+  margin-bottom: 5px;
+  max-height: min-content;
+}
+
+.compact-video-container:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  background-color: rgb(241, 241, 241);
+}
+
+.video-data {
+  margin: 3px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2em;
+}
+
+.thumbnail-title {
+  font-weight: bold;
+}
+
+.compact-thumbnail {
+  border-radius: 7px;
+  height: 80px;
+  aspect-ratio: 16/9;
+}
+
+.no-space {
+  display: block;
+}

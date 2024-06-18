@@ -1,0 +1,108 @@
+/* Sidebar.css */
+.sidebar {
+    background-color: #f5f5f5;
+    color: #333;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 56px; /* Add this: it should match the height of your header */
+    transition: width 0.3s;
+    overflow-y: auto;
+    z-index: 1000;
+    bottom: 0; /* Add this to make sidebar full height */
+  }
+  .sidebar.dark-mode {
+    background-color: #1f1f1f;
+    color: #ffffff;
+  }
+  .sidebar.dark-mode .toggle-btn{
+    background-color: #464343;
+    border: none;
+    color: #606060;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 15px;
+    width: 100%;
+    text-align: left;
+  }
+  .sidebar.dark-mode .sidebar-section h3 {
+    color: #ffffff;
+  }
+  
+  .sidebar.dark-mode .sidebar-section a {
+    color: #ffffff;
+  }
+  .sidebar.expanded {
+    width: 240px;
+  }
+  
+  .sidebar.collapsed {
+    width: 60px;
+  }
+  
+  .toggle-btn {
+    background-color: #f5f5f5;
+    border: none;
+    color: #606060;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 15px;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .sidebar-section {
+    padding: 15px;
+  }
+  
+  .sidebar h3 {
+    color: #606060;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar a {
+    align-items: center;
+    color: #333;
+    display: flex;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .sidebar a:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .icon {
+    font-size: 20px;
+    margin-right: 15px;
+    min-width: 24px;
+    text-align: center;
+  }
+  
+  .sidebar.collapsed .icon {
+    margin-right: 0;
+  }
+  
+  .sidebar.collapsed h3,
+  .sidebar.collapsed span {
+    display: none;
+  }
+  .toggle-btn {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f5f5f5;
+  }

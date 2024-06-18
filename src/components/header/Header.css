@@ -1,0 +1,161 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+.header.dark-mode {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+.header.dark-mode .search-bar {
+  background-color: #121212;
+  color: #ffffff;
+  border-color: #303030;
+  border-radius: 20px 0 0 20px;
+}
+
+.header.dark-mode .search-bar::placeholder {
+  color: #b3b3b3;
+}
+
+.header.dark-mode .search-button {
+  background-color: #000000;
+  border-color: #303030;
+  border-radius: 0 20px 20px 0;
+}
+
+.icon-button {
+  background: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  margin: 0 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.icon-button:hover {
+  background-color: #c1c0c0;
+}
+
+.mode-icon {
+  width: 24px;
+  height: 24px;
+  fill: #606060;
+  transition: fill 0.3s;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 30px;
+  margin-right: 10px;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.center-section {
+  flex-grow: 1;
+  max-width: 728px;
+  margin: 0 auto;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar {
+  flex-grow: 1;
+  height: 40px;
+  padding: 0 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-right: none;
+  outline: none;
+  border-radius: 20px 0 0 20px;
+}
+
+.search-bar:focus {
+  border-color: #1c62b9;
+}
+
+.search-button {
+  height: 40px;
+  width: 65px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-left: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border-radius: 0 20px 20px 0;
+}
+
+.search-button:hover {
+  background-color: #f0f0f0;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.search-button:hover .search-icon {
+  opacity: 0.8;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+.upload-icon,
+.user-icon {
+  height: 24px;
+  width: 24px;
+}
+
+.upload-icon {
+  fill: #606060;
+  transition: fill 0.3s;
+}
+
+.icon-button .test img {
+  padding: 4px !important;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .center-section {
+    max-width: 90%;
+  }
+  .search-container {
+    max-width: 100%;
+  }
+}

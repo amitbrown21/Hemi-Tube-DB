@@ -1,0 +1,54 @@
+.signup-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-up-container {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 450px;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.sign-up-container.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+.signup-input {
+  margin-bottom: 20px;
+}
+
+.logo-signup {
+  display: flex;
+  justify-content: center;
+  top: 0px;
+  margin: 20px;
+}
+
+.heading {
+  font-size: 1.7rem;
+}
+
+.pass-req {
+  display: flex;
+  text-align: left;
+  font-size: smaller;
+  margin-left: 7px;
+}
+
+.sign-button {
+  margin: 30px;
+  margin-top: 35px;
+  font-size: larger;
+  width: 55%;
+  height: 45%;
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.sign-button.dark-mode {
+  background-color: #424242;
+}

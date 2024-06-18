@@ -1,0 +1,80 @@
+.comment-header {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+}
+.user-comment-container {
+  display: flex;
+  align-items: center;
+}
+.submit-comment-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  vertical-align: middle;
+  border-radius: 20px;
+  padding: 10px;
+}
+.submit-comment-container input,
+.submit-comment-container input:focus {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: inherit;
+}
+.comment-submit-buttons {
+  visibility: hidden;
+  display: flex;
+  flex-direction: row-reverse;
+  align-self: flex-end;
+}
+.comment-submit-buttons.visible {
+  visibility: visible;
+}
+.comment-submit-buttons.hidden {
+  visibility: hidden;
+}
+.comment-submit-buttons button {
+  margin-left: 15px;
+  border-color: transparent;
+  background-color: #f0f0f0;
+  color: #000000;
+}
+.comment-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-bottom: 15px;
+}
+.commenter-name {
+  font-weight: bold;
+}
+.comment-buttons button {
+  margin-right: 7px;
+  font-weight: bolder;
+  font-size: small;
+  background-color: transparent;
+  border: none;
+  color: #000000;
+}
+.comment-buttons button:hover {
+  text-decoration: underline;
+}
+/* Dark mode styles */
+.comment-header.dark-mode {
+  color: #ffffff;
+}
+.submit-comment-container.dark-mode {
+  background-color: #303030;
+}
+.submit-comment-container.dark-mode input,
+.submit-comment-container.dark-mode input:focus {
+  color: #ffffff;
+}
+.comment-submit-buttons.dark-mode button {
+  background-color: #424242;
+  color: #ffffff;
+}
+.comment-buttons.dark-mode button {
+  color: #ffffff;
+}

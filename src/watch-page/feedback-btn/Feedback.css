@@ -1,0 +1,75 @@
+.icon-img {
+  padding: 6px;
+  width: 32px;
+}
+
+.feedback-button {
+  border: none;
+  border: solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
+  color: #35393d;
+  background-color: #dedede;
+  padding: 0px 10px;
+  height: fit-content;
+  box-shadow: none;
+  border-radius: 15px;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.feedback-button:hover {
+  background-color: #e9e9ed;
+}
+
+.feedback-button:active {
+  background-color: #f1f1f1;
+}
+
+#left-feedback-button {
+  border-radius: 0;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+#right-feedback-button {
+  border-left: none;
+  border-radius: 0;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+#share-button {
+  border-radius: 15px;
+}
+
+.dropend .dropdown-menu {
+  border-radius: 20px;
+}
+
+.back {
+  border-color: #7e868d;
+  border: solid 1px;
+}
+.feedback-button .dark-mode {
+  background-color: #272727;
+
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.feedback-button .dark-mode:hover {
+  background-color: #424242;
+}
+
+.feedback-button .dark-mode:active {
+  background-color: #535353;
+}
+
+.back .dark-mode {
+  border-color: #ffffff;
+}

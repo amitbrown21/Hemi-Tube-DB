@@ -1,0 +1,25 @@
+#info {
+  font-size: smaller;
+  color: rgb(134, 133, 133);
+}
+
+.dark-mode #info {
+  color: #b3b3b3;
+}
+
+hr {
+  border-color: gray;
+}
+
+.dark-mode hr {
+  border-color: #4d4d4d;
+}
+
+.a-no-style {
+  color: black;
+  text-decoration: none;
+}
+
+.dark-mode .a-no-style {
+  color: #ffffff;
+}

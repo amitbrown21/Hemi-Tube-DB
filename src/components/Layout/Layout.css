@@ -1,0 +1,35 @@
+/* Layout.css */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.content-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding-top: 56px; /* Add this: it should match the height of your header */
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-left: 240px; /* Width of the expanded sidebar */
+  transition: margin-left 0.3s; /* Smooth transition for sidebar toggle */
+}
+
+/* New styles */
+.sidebar.collapsed + .main-content {
+  margin-left: 60px; /* Width of the collapsed sidebar */
+}
+/* Dark mode styles */
+.app-layout.dark-mode {
+  background-color: #121212;
+}
+
+.main-content.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}

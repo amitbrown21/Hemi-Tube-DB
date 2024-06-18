@@ -1,0 +1,362 @@
+[
+  {
+    "id": 1,
+    "url": "/assets/videos/daniel.mp4",
+    "title": "Funny Video",
+    "owner": "unicorn",
+    "date": "12/04/20",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/daniel.jpg",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis risus eget urna aliquet lacinia eget ut nisi. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 101,
+        "body": "This video is hilarious!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "12/05/20"
+      },
+      {
+        "id": 102,
+        "body": "I couldn't stop laughing!",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "12/06/20"
+      },
+      {
+        "id": 103,
+        "body": "Nice video! Keep it up.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "12/07/20"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "url": "/assets/videos/ad.mp4",
+    "title": "Title of the video aa",
+    "owner": "unicorn",
+    "date": "12/03/20",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/ad.jpg",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis risus eget urna aliquet lacinia eget ut nisi. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 201,
+        "body": "Great advertisement!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "12/05/20"
+      },
+      {
+        "id": 202,
+        "body": "Very catchy!",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "12/06/20"
+      },
+      {
+        "id": 203,
+        "body": "Well done!",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "12/07/20"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "url": "assets/videos/sunset.mp4",
+    "title": "Burning Sunset: Nature's Canvas",
+    "owner": "award",
+    "date": "08/15/21",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/sunset.jpg",
+    "description": "Witness the breathtaking beauty of a sunset over the sea, where the sky transforms into a canvas of vibrant oranges, pinks, and purples. This 10-second clip captures the serene moment when the sun dips below the horizon, casting a warm glow across the tranquil waters.",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 301,
+        "body": "Amazing colors!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "08/16/21"
+      },
+      {
+        "id": 302,
+        "body": "So relaxing to watch.",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "08/17/21"
+      },
+      {
+        "id": 303,
+        "body": "Nature at its best.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "08/18/21"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "url": "/assets/videos/coke.mp4",
+    "title": "Refreshing Moment: Classic Cola Ad",
+    "owner": "enneagram",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "date": "11/29/22",
+    "thumbnail": "/assets/thumbnails/coke.jpg",
+    "description": "Experience the timeless appeal of a classic Coca-Cola commercial in just 10 seconds. This vintage ad captures the essence of refreshment, showcasing the iconic bottle, the satisfying fizz, and the pure enjoyment of that first sip.",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 401,
+        "body": "Classic and refreshing!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "11/30/22"
+      },
+      {
+        "id": 402,
+        "body": "Brings back memories.",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "12/01/22"
+      },
+      {
+        "id": 403,
+        "body": "I love this ad.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "12/02/22"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "url": "/assets/videos/milky.mp4",
+    "title": "Celestial Symphony: Milky Way's Ascent",
+    "owner": "award",
+    "date": "06/22/23",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/milky.jpg",
+    "description": "In this mesmerizing time-lapse, witness the grandeur of our galactic home, the Milky Way, as it gracefully rises in the night sky. This 10-second clip offers a glimpse into the cosmic ballet, revealing millions of stars painting a luminous arc across the heavens.",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 501,
+        "body": "Stunning view!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "06/23/23"
+      },
+      {
+        "id": 502,
+        "body": "I love stargazing.",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "06/24/23"
+      },
+      {
+        "id": 503,
+        "body": "Truly magnificent.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "06/25/23"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "url": "/assets/videos/doggo.mp4",
+    "title": "2D Test Animation: A Quick Study",
+    "owner": "enneagram",
+    "date": "03/15/24",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/doggo.jpg",
+    "description": "Dive into the world of 2D animation with this concise 10-second test. Watch as lines, shapes, and colors come to life, demonstrating fundamental animation principles. This snippet showcases timing, spacing, and movement, offering insights into the animator's process.",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 601,
+        "body": "Great animation!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "03/16/24"
+      },
+      {
+        "id": 602,
+        "body": "Very well done.",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "03/17/24"
+      },
+      {
+        "id": 603,
+        "body": "Love the style.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "03/18/24"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "url": "/assets/videos/countdown.mp4",
+    "title": "Epic 10-Second Countdown",
+    "owner": "unicorn",
+    "date": "09/30/23",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/countdown.jpg",
+    "description": "Experience the thrill of anticipation with this heart-pounding 10-second countdown. Featuring a dynamic voice-over and an adrenaline-pumping intro track, this countdown sets the stage for any grand reveal or epic event. Perfect for live streams, event intros, or any moment that demands heightened excitement.",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 701,
+        "body": "Exciting countdown!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "10/01/23"
+      },
+      {
+        "id": 702,
+        "body": "Got me hyped up.",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "10/02/23"
+      },
+      {
+        "id": 703,
+        "body": "Perfect for events.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "10/03/23"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "url": "/assets/videos/loop.mp4",
+    "title": "Seamless 10-Second Loop",
+    "owner": "award",
+    "views": "0",
+    "date": "11/11/23",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/loop.jpg",
+    "description": "Behold the art of the perfect loop in this mesmerizing 10-second video. Meticulously crafted to transition seamlessly from end to start, this loop creates an infinite, continuous motion. Whether used as a live stream background, a loading screen, or a visual meditation, it's a testament to precision in editing.",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 801,
+        "body": "Flawless loop!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "11/12/23"
+      },
+      {
+        "id": 802,
+        "body": "So satisfying.",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "11/13/23"
+      },
+      {
+        "id": 803,
+        "body": "Great for backgrounds.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "11/14/23"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "url": "/assets/videos/doc.mp4",
+    "title": "10 Seconds of Pure Comedy Gold",
+    "owner": "enneagram",
+    "date": "05/01/22",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/doc.jpg",
+    "description": "Prepare for the most concentrated dose of hilarity ever squeezed into 10 seconds! This viral clip has taken the internet by storm, leaving viewers in stitches with its perfect comedic timing, unexpected twist, and universal humor. Critics hail it as a masterpiece of modern comedy.",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 901,
+        "body": "So funny!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "05/02/22"
+      },
+      {
+        "id": 902,
+        "body": "I can't stop laughing!",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "05/03/22"
+      },
+      {
+        "id": 903,
+        "body": "Best comedy clip ever.",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "05/04/22"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "url": "/assets/videos/pizza.mp4",
+    "title": "Sizzling Delight: 10-Sec Pizza Quesadilla",
+    "owner": "unicorn",
+    "date": "07/15/23",
+    "views": "0",
+    "likes": "0",
+    "dislikes": "0",
+    "thumbnail": "/assets/thumbnails/pizza.jpg",
+    "description": "In just 10 seconds, witness the mouthwatering magic of grilled pizza quesadillas. This quick clip shows gooey cheese melting between crispy tortillas, infused with zesty pizza toppings. It's a fusion dish that's fast, fun, and undeniably delicious—perfect for busy food lovers!",
+    "duration": "00:10",
+    "comments": [
+      {
+        "id": 1001,
+        "body": "Looks delicious!",
+        "username": "pretzel",
+        "profilePicture": "assets/icons/pretzel.svg",
+        "date": "07/16/23"
+      },
+      {
+        "id": 1002,
+        "body": "I'm so hungry now.",
+        "username": "hop",
+        "profilePicture": "assets/icons/hop.svg",
+        "date": "07/17/23"
+      },
+      {
+        "id": 1003,
+        "body": "Recipe please!",
+        "username": "gazelle",
+        "profilePicture": "assets/icons/gazelle.svg",
+        "date": "07/18/23"
+      }
+    ]
+  }
+]

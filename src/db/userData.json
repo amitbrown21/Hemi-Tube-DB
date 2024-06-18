@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "firstName": "first name",
+    "lastName": "last name",
+    "username": "username",
+    "password": "password",
+    "gender": "male",
+    "profilePicture": "assets/icons/exclude.svg",
+    "subscribers": "100k"
+  },
+  {
+    "id": 2,
+    "firstName": "first name 2",
+    "lastName": "last name 2",
+    "username": "username 2",
+    "password": "password 2",
+    "gender": "female",
+    "profilePicture": "assets/icons/exclude.svg",
+    "subscribers": "200k"
+  },
+  {
+    "id": 3,
+    "firstName": "admin",
+    "lastName": "admin",
+    "username": "admin",
+    "password": "admin",
+    "gender": "male",
+    "profilePicture": "assets/icons/browser-edge.svg",
+    "subscribers": "300k"
+  },
+  {
+    "id": 0,
+    "firstName": "Empty User",
+    "lastName": "Empty User",
+    "username": "",
+    "password": "",
+    "gender": "",
+    "profilePicture": "assets/icons/notLoggedIn.svg",
+    "subscribers": "0"
+  },
+  {
+    "id": 4,
+    "first_name": "Unicorn",
+    "last_name": "Iron",
+    "username": "unicorn",
+    "password": "password123",
+    "gender": "male",
+    "profilePicture": "assets/icons/unicorn.svg",
+    "subscribers": "50k"
+  },
+  {
+    "id": 5,
+    "first_name": "Award",
+    "last_name": "Winner",
+    "username": "award",
+    "password": "password123",
+    "gender": "female",
+    "profilePicture": "assets/icons/award.svg",
+    "subscribers": "75k"
+  },
+  {
+    "id": 6,
+    "first_name": "Enneagram",
+    "last_name": "Expert",
+    "username": "enneagram",
+    "password": "password123",
+    "gender": "male",
+    "profilePicture": "assets/icons/enneagram.svg",
+    "subscribers": "100k"
+  }
+]
