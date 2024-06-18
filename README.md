@@ -1,5 +1,5 @@
 # About
-This project is a YouTube clone developed by a team of three, Omri, Shon and Amit. It consists of a [website](https://github.com/OmriLeviGit/Hemi-Tube) and an [Android app](https://github.com/OmriLeviGit/Hemi-Tube-Android) that aim to replicate the core functionalities of YouTube.
+This project is a YouTube clone developed by a team of three, Omri, Shon and Amit. It consists of a [website](https://github.com/amitbrown21/Hemi-Tube-DB) and an [Android app](https://github.com/amitbrown21/Hemi-Tube-Android-DB) that aim to replicate the core functionalities of YouTube.
 
 ## Building process
 
@@ -31,14 +31,14 @@ Our team started the development process by focusing on the website. We divided 
 ## Setup and Installation
 ### Website
 
-- Clone the repository: git clone https://github.com/OmriLeviGit/Hemi-Tube
+- Clone the repository: git clone https://github.com/amitbrown21/Hemi-Tube-DB
 - Install dependencies: npm install
 - Start the development server: npm start
 - Open the website in your browser at http://localhost:3000
 
 ### Android App
 
-- Clone the repository: git clone https://github.com/OmriLeviGit/Hemi-Tube-Android
+- Clone the repository: git clone https://github.com/amitbrown21/Hemi-Tube-Android-DB
 - Open the project in Android Studio
 - Sync the project with Gradle files
 - Build and run the app on an Android device or emulator
@@ -46,7 +46,6 @@ Our team started the development process by focusing on the website. We divided 
 ---
 
 ### Contributors
-
-[Omri Levi](https://github.com/OmriLeviGit)  
+ 
 [Shon Trubin](https://github.com/ShonTrubin)  
-[Amit Burstein](https://github.com/amitbrown21)  
+[Amit Brounstine](https://github.com/amitbrown21)  
