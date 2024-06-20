@@ -1,40 +1,53 @@
-const Video = require('../models/Video');
+const Video = require("../models/videoModel");
+const Comment = require("../models/commentModel");
 
 const commentServices = {
   getCommentsByVideoId: async (videoId) => {
-    const video = await Video.findById(videoId);
+    const video = await Video.findById(videoId).populate("comments");
     return video ? video.comments : [];
   },
 
   createComment: async (videoId, commentData) => {
     const video = await Video.findById(videoId);
-    if (!video) throw new Error('Video not found');
-    video.comments.push(commentData);
-    await video.save();
-    return video.comments[video.comments.length - 1];
-  },
+    if (!video) throw new Error("Video not found");
 
-  getCommentById: async (videoId, commentId) => {
-    const video = await Video.findById(videoId);
-    return video ? video.comments.id(commentId) : null;
-  },
+    const comment = new Comment(commentData);
+    await comment.save();
 
-  updateComment: async (videoId, commentId, updateData) => {
-    const video = await Video.findById(videoId);
-    if (!video) throw new Error('Video not found');
-    const comment = video.comments.id(commentId);
-    if (!comment) throw new Error('Comment not found');
-    Object.assign(comment, updateData);
+    video.comments.push(comment._id);
     await video.save();
     return comment;
   },
 
+  getCommentById: async (videoId, commentId) => {
+    const video = await Video.findById(videoId).populate("comments");
+    if (!video) return null;
+    const comment = video.comments.find((c) => c._id.equals(commentId));
+    return comment || null;
+  },
+
+  updateComment: async (videoId, commentId, updateData) => {
+    const video = await Video.findById(videoId).populate("comments");
+    if (!video) throw new Error("Video not found");
+    const comment = video.comments.find((c) => c._id.equals(commentId));
+    if (!comment) throw new Error("Comment not found");
+    Object.assign(comment, updateData);
+    await comment.save();
+    return comment;
+  },
+
   deleteComment: async (videoId, commentId) => {
-    const video = await Video.findById(videoId);
-    if (!video) throw new Error('Video not found');
-    video.comments.id(commentId).remove();
+    const video = await Video.findById(videoId).populate("comments");
+    if (!video) throw new Error("Video not found");
+    const commentIndex = video.comments.findIndex((c) =>
+      c._id.equals(commentId)
+    );
+    if (commentIndex === -1) throw new Error("Comment not found");
+    const comment = video.comments[commentIndex];
+    video.comments.splice(commentIndex, 1);
     await video.save();
-    return { message: 'Comment deleted successfully' };
+    await Comment.findByIdAndDelete(commentId);
+    return { message: "Comment deleted successfully" };
   },
 };
 

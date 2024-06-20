@@ -1,11 +1,20 @@
-const usersServices = require('../services/usersServices');
+const usersServices = require("../services/usersServices");
 
 const usersController = {
+  getAllUsers: async (req, res) => {
+    try {
+      const users = await usersServices.getUsers();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
   getUserById: async (req, res) => {
     try {
       const user = await usersServices.getUserById(req.params.id);
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
       res.json(user);
     } catch (error) {
@@ -24,9 +33,12 @@ const usersController = {
 
   updateUser: async (req, res) => {
     try {
-      const updatedUser = await usersServices.updateUser(req.params.id, req.body);
+      const updatedUser = await usersServices.updateUser(
+        req.params.id,
+        req.body
+      );
       if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
       res.json(updatedUser);
     } catch (error) {
@@ -38,9 +50,9 @@ const usersController = {
     try {
       const deletedUser = await usersServices.deleteUser(req.params.id);
       if (!deletedUser) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
-      res.json({ message: 'User deleted successfully' });
+      res.json({ message: "User deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -54,8 +66,6 @@ const usersController = {
       res.status(500).json({ message: error.message });
     }
   },
-
-  // Add more user-related controller methods as needed
 };
 
 module.exports = usersController;

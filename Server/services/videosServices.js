@@ -1,30 +1,39 @@
-const Video = require('../models/videosModel');
+const Video = require("../models/videoModel");
+const User = require("../models/userModel");
 
-const createVideo = async (videoData) => {
-    const video = new Video(videoData);
-    return await video.save();
+const createVideo = async (userId, videoData) => {
+  const video = new Video({ ...videoData, owner: userId });
+  await video.save();
+  await User.findByIdAndUpdate(userId, { $push: { videosID: video._id } });
+  return video;
 };
 
 const getVideos = async () => {
-    return await Video.find();
+  return await Video.find();
 };
 
 const getVideoById = async (id) => {
-    return await Video.findById(id);
+  return await Video.findById(id);
 };
 
 const updateVideo = async (id, updateData) => {
-    return await Video.findByIdAndUpdate(id, updateData, { new: true });
+  return await Video.findByIdAndUpdate(id, updateData, { new: true });
 };
 
 const deleteVideo = async (id) => {
-    return await Video.findByIdAndDelete(id);
+  const video = await Video.findByIdAndDelete(id);
+  if (video) {
+    await User.findByIdAndUpdate(video.owner, {
+      $pull: { videosID: video._id },
+    });
+  }
+  return video;
 };
 
 module.exports = {
-    createVideo,
-    getVideos,
-    getVideoById,
-    updateVideo,
-    deleteVideo
+  createVideo,
+  getVideos,
+  getVideoById,
+  updateVideo,
+  deleteVideo,
 };
