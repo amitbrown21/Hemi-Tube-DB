@@ -1,0 +1,87 @@
+@baseUrl = http://localhost:3000/api
+
+### Users
+
+# Get all users
+GET {{baseUrl}}/users
+
+### Create a new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+### Get a specific user
+GET {{baseUrl}}/users/userId
+
+### Update a user
+PUT {{baseUrl}}/users/userId
+Content-Type: application/json
+
+{
+  "email": "newemail@example.com"
+}
+
+### Delete a user
+DELETE {{baseUrl}}/users/userId
+
+### Videos
+
+# Get all videos
+GET {{baseUrl}}/videos
+
+### Create a new video
+POST {{baseUrl}}/videos
+Content-Type: application/json
+
+{
+  "title": "Test Video",
+  "description": "This is a test video",
+  "url": "https://example.com/test-video"
+}
+
+### Get a specific video
+GET {{baseUrl}}/videos/videoId
+
+### Update a video
+PUT {{baseUrl}}/videos/videoId
+Content-Type: application/json
+
+{
+  "title": "Updated Test Video"
+}
+
+### Delete a video
+DELETE {{baseUrl}}/videos/videoId
+
+### Comments
+
+# Get all comments for a video
+GET {{baseUrl}}/videos/videoId/comments
+
+### Create a new comment
+POST {{baseUrl}}/videos/videoId/comments
+Content-Type: application/json
+
+{
+  "text": "This is a test comment",
+  "userId": "userId"
+}
+
+### Get a specific comment
+GET {{baseUrl}}/comments/commentId
+
+### Update a comment
+PUT {{baseUrl}}/comments/commentId
+Content-Type: application/json
+
+{
+  "text": "This is an updated comment"
+}
+
+### Delete a comment
+DELETE {{baseUrl}}/comments/commentId
