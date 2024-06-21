@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const usersRoutes = require("./routes/usersRoutes");
 const videosRoutes = require("./routes/videosRoutes");
@@ -6,6 +7,7 @@ const videosRoutes = require("./routes/videosRoutes");
 const app = express();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 
 // Database connection
