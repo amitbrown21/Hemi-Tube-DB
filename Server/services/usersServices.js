@@ -26,6 +26,10 @@ const getUserVideos = async (id) => {
   return user ? user.videosID : [];
 };
 
+const getUserByUsername = async (username) => {
+  return await User.findOne({ username });
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -33,4 +37,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserVideos,
+  getUserByUsername,
 };

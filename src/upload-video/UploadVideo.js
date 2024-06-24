@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import axios from "axios";
 import InputField from "../components/InputField";
 import TextareaField from "../components/TextareaField";
 import FileInputField from "../components/FileinputField";
@@ -18,10 +19,7 @@ function UploadVideo({ videos, setVideos, currentUser }) {
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
     if (hrs > 0) {
-      return `${hrs}:${String(mins).padStart(2, "0")}:${String(secs).padStart(
-        2,
-        "0"
-      )}`;
+      return `${hrs}:${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
     } else {
       return `${mins}:${String(secs).padStart(2, "0")}`;
     }
@@ -38,7 +36,7 @@ function UploadVideo({ videos, setVideos, currentUser }) {
     }
   }, [videoFile]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const videoFormats = ["video/mp4"];
@@ -54,30 +52,33 @@ function UploadVideo({ videos, setVideos, currentUser }) {
       return;
     }
 
-    const videoURL = URL.createObjectURL(videoFile);
-    const thumbnailURL = URL.createObjectURL(thumbnailFile);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("video", videoFile);
+    formData.append("thumbnail", thumbnailFile);
+    formData.append("duration", duration ? formatDuration(duration) : "00:00");
 
-    const newVideo = {
-      id: videos.length + 1, // Ensure each video has a unique ID
-      title,
-      description,
-      url: videoURL,
-      thumbnail: thumbnailURL,
-      owner: currentUser ? currentUser.username : "Unknown",
-      views: "0",
-      date: new Date().toLocaleDateString(),
-      comments: [],
-      likes: 0,
-      dislikes: 0,
-      duration: duration ? formatDuration(duration) : "00:00",
-    };
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post("/api/videos", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`
+        },
+      });
 
-    setVideos([...videos, newVideo]);
-    setRedirect(true); // Set redirect to true to trigger navigation
+      const newVideo = response.data;
+      setVideos([...videos, newVideo]);
+      setRedirect(true);
+    } catch (error) {
+      console.error("Error uploading video:", error);
+      alert("Error uploading video. Please try again.");
+    }
   };
 
   if (redirect) {
-    return <Navigate to="/" />; // Redirect to home page
+    return <Navigate to="/" />;
   }
 
   return (
