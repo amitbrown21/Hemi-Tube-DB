@@ -46,6 +46,14 @@ function HomePage({
     setCurrentVideo(video);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
   return (
     <div className={`homepage-root ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="video-grid">
@@ -77,8 +85,7 @@ function HomePage({
                 {/* Ensure this matches your video schema */}
               </p>
               <p className={`video-stats ${isDarkMode ? "dark-mode" : ""}`}>
-                {video.views} views •{" "}
-                {new Date(video.date).toLocaleDateString()}
+                {video.views} views • {formatDate(video.date)}
               </p>
             </div>
           </div>
