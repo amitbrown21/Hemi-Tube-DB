@@ -73,7 +73,7 @@ function UploadVideo({ videos, setVideos, currentUser }) {
     // The post request is hard coded to a user i already have
     try {
       const res = await fetch(
-        `http://localhost:3000/api/users/667d31dd3068140c54f576d7/videos`,
+        `http://localhost:3000/api/users/667d4deda1b04bddd6aadeb9/videos`,
         {
           method: "POST",
           headers: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import "./Home.css";
 
@@ -18,6 +18,24 @@ function HomePage({
   const [searchParams] = useSearchParams();
   searchQuery = searchParams.get("search") || "";
 
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/videos");
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to fetch videos");
+        }
+        const data = await res.json();
+        setVideos(data);
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
+    };
+
+    fetchVideos();
+  }, [setVideos]);
+
   console.log("in HomePage", currentUser);
 
   const filteredVideos = videos.filter((video) =>
@@ -32,7 +50,7 @@ function HomePage({
     <div className={`homepage-root ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="video-grid">
         {filteredVideos.map((video) => (
-          <div key={video.id} className="video-card">
+          <div key={video._id} className="video-card">
             <div className="video-thumbnail-container">
               <Link to="/watchpage" onClick={() => handleVideoClick(video)}>
                 <img
@@ -55,10 +73,12 @@ function HomePage({
                 )}
               </div>
               <p className={`video-owner ${isDarkMode ? "dark-mode" : ""}`}>
-                {video.owner}
+                {video.owner.username}{" "}
+                {/* Ensure this matches your video schema */}
               </p>
               <p className={`video-stats ${isDarkMode ? "dark-mode" : ""}`}>
-                {video.views} views • {video.date}
+                {video.views} views •{" "}
+                {new Date(video.date).toLocaleDateString()}
               </p>
             </div>
           </div>

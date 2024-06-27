@@ -14,7 +14,9 @@ function WatchPage({
   isDarkMode,
 }) {
   const [views, setViews] = useState(
-    parseInt(currentVideo.views.replace(/,/g, ""))
+    typeof currentVideo.views === "number"
+      ? currentVideo.views
+      : parseInt(currentVideo.views.replace(/,/g, ""))
   );
   const [viewIncremented, setViewIncremented] = useState(false);
 
@@ -22,8 +24,8 @@ function WatchPage({
     if (!viewIncremented) {
       setViews((prevViews) => prevViews + 1);
       const updatedVideos = videos.map((video) => {
-        if (video.id === currentVideo.id) {
-          return { ...video, views: (views + 1).toLocaleString() };
+        if (video._id === currentVideo._id) {
+          return { ...video, views: views + 1 };
         }
         return video;
       });
@@ -33,7 +35,11 @@ function WatchPage({
   }, [currentVideo, viewIncremented, setVideos, views, videos]);
 
   useEffect(() => {
-    setViews(parseInt(currentVideo.views.replace(/,/g, "")));
+    setViews(
+      typeof currentVideo.views === "number"
+        ? currentVideo.views
+        : parseInt(currentVideo.views.replace(/,/g, ""))
+    );
     setViewIncremented(false);
   }, [currentVideo]);
 
@@ -64,7 +70,7 @@ function WatchPage({
           />
           <CommentSection
             currentUser={currentUser}
-            videoId={currentVideo.id}
+            videoId={currentVideo._id}
             comments={currentVideo.comments || []}
             videos={videos}
             setVideos={setVideos}
