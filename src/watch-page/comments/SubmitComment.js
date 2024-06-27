@@ -14,7 +14,6 @@ const SubmitComment = ({ currentUser, addComment }) => {
   const onComment = () => {
     if (commentBody.trim() !== "") {
       const newComment = {
-        id: Date.now(), // or another unique id generator
         body: commentBody,
         username: currentUser?.username || "Unknown",
         profilePicture: profilePicture,
