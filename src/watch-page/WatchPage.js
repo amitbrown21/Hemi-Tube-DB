@@ -13,6 +13,7 @@ function WatchPage({
   users,
   isDarkMode,
 }) {
+  console.log(currentVideo);
   const [views, setViews] = useState(
     typeof currentVideo.views === "number"
       ? currentVideo.views
@@ -21,15 +22,37 @@ function WatchPage({
   const [viewIncremented, setViewIncremented] = useState(false);
 
   useEffect(() => {
+    const incrementViews = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ views: views + 1 }),
+          }
+        );
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to update views");
+        }
+
+        const updatedVideo = await res.json();
+        const updatedVideos = videos.map((video) =>
+          video._id === currentVideo._id ? updatedVideo : video
+        );
+        setVideos(updatedVideos);
+      } catch (error) {
+        console.error("Error updating views:", error);
+      }
+    };
+
     if (!viewIncremented) {
       setViews((prevViews) => prevViews + 1);
-      const updatedVideos = videos.map((video) => {
-        if (video._id === currentVideo._id) {
-          return { ...video, views: views + 1 };
-        }
-        return video;
-      });
-      setVideos(updatedVideos);
+      incrementViews();
       setViewIncremented(true);
     }
   }, [currentVideo, viewIncremented, setVideos, views, videos]);
