@@ -1,0 +1,112 @@
+@baseUrl = http://localhost:3000/api
+
+### Users
+
+# Get all users
+GET {{baseUrl}}/users
+
+### Create a new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "johndoe1",
+  "password": "password123",
+  "gender": "male",
+  "profilePicture": "https://example.com/profile-picture.jpg",
+  "subscribers": "0"
+}
+
+### Get a specific user
+GET {{baseUrl}}/users/667463e9fa759519f4019616
+
+### Update a user
+PUT {{baseUrl}}/users/667463e9fa759519f4019616
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe Updated",
+  "username": "johndoeupdated",
+  "password": "newpassword123",
+  "gender": "male",
+  "profilePicture": "https://example.com/new-profile-picture.jpg",
+  "subscribers": "10"
+}
+
+### Delete a user
+DELETE {{baseUrl}}/users/667463e9fa759519f4019616
+
+### Videos
+
+# Get all videos
+GET {{baseUrl}}/videos
+
+### Create a new video for a specific user
+POST {{baseUrl}}/users/667463e9fa759519f4019616/videos
+Content-Type: application/json
+
+{
+  "title": "Test Video",
+  "description": "This is a test video",
+  "url": "https://example.com/test-video",
+  "date": "06/20/2024",
+  "thumbnail": "https://example.com/test-thumbnail.jpg",
+  "duration": "10:30"
+}
+
+### Get all videos for a specific user
+GET {{baseUrl}}/users/667463e9fa759519f4019616/videos
+
+### Get a specific video for a specific user
+GET {{baseUrl}}/users/667463e9fa759519f4019616/videos/66746dfb5e2211125e0bcd2c
+
+### Update a specific video for a specific user
+PUT {{baseUrl}}/users/667463e9fa759519f4019616/videos/66746ec55e2211125e0bcd46
+Content-Type: application/json
+
+{
+  "title": "Updated Test Video",
+  "description": "This is an updated test video",
+  "url": "https://example.com/updated-test-video",
+  "thumbnail": "https://example.com/updated-test-thumbnail.jpg",
+  "duration": "12:45"
+}
+
+### Delete a specific video for a specific user
+DELETE {{baseUrl}}/users/66746c1536a34ed2cf661850/videos/66746cead2a87149691dd404
+
+### Comments
+
+# Get all comments for a specific video of a specific user
+GET {{baseUrl}}/users/667463e9fa759519f4019616/videos/66746ec55e2211125e0bcd46/comments
+
+### Create a new comment for a specific video of a specific user
+POST {{baseUrl}}/users/667463e9fa759519f4019616/videos/66746ec55e2211125e0bcd46/comments
+Content-Type: application/json
+
+{
+  "body": "This is a test comment",
+  "username": "johndoe",
+  "profilePicture": "https://example.com/profile-picture.jpg",
+  "date": "06/20/2024"
+}
+
+### Get a specific comment for a specific video of a specific user
+GET {{baseUrl}}/users/667463e9fa759519f4019616/videos/66746ec55e2211125e0bcd46/comments/6674711b3f79865dcca9c6e5
+
+### Update a specific comment for a specific video of a specific user
+PUT {{baseUrl}}/users/667463e9fa759519f4019616/videos/66746ec55e2211125e0bcd46/comments/6674711b3f79865dcca9c6e5
+Content-Type: application/json
+
+{
+  "body": "This is an updated test comment",
+  "username": "johndoe",
+  "profilePicture": "https://example.com/new-profile-picture.jpg",
+  "date": "06/21/2024"
+}
+
+### Delete a specific comment for a specific video of a specific user
+DELETE {{baseUrl}}/users/667463e9fa759519f4019616/videos/66746ec55e2211125e0bcd46/comments/66747024871e941a5c8c3196
