@@ -22,6 +22,18 @@ const usersController = {
     }
   },
 
+  getUserByUsername: async (req, res) => {
+    try {
+      const user = await usersServices.getUserByUsername(req.params.username);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
   createUser: async (req, res) => {
     try {
       const newUser = await usersServices.createUser(req.body);
