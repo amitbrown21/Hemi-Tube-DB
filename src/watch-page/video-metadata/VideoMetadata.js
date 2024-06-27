@@ -1,20 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import LikeButton from "../feedback-btn/LikeButton";
 import DislikeButton from "../feedback-btn/DislikeButton";
 import ShareButton from "../feedback-btn/ShareButton";
 import "./VideoMetadata.css";
 import UserPic from "../../components/user-pic/UserPic";
 
-const VideoMetadata = ({ videoData, users, isDarkMode }) => {
+const VideoMetadata = ({ videoData, users, isDarkMode, updateVideoData }) => {
   const [voteStatus, setVoteStatus] = useState(0); // Initial state is no vote
   const [upVotes, setUpVotes] = useState(videoData.likes); // Track upvote count
   const [downVotes, setDownVotes] = useState(videoData.dislikes); // Track downvote count
 
   // Find the owner data from the list of users
-  const ownerData = users.find((user) => user.username === videoData.owner) || {
+  const ownerData = users.find((user) => user._id === videoData.owner) || {
     username: "Unknown",
     subscribers: "0",
     profilePicture: "assets/icons/notLoggedIn.svg",
+  };
+
+  const handleLike = () => {
+    const newVoteStatus = voteStatus === 1 ? 0 : 1;
+    const newUpVotes = voteStatus === 1 ? upVotes - 1 : upVotes + 1;
+    const newDownVotes = voteStatus === -1 ? downVotes - 1 : downVotes;
+    setVoteStatus(newVoteStatus);
+    setUpVotes(newUpVotes);
+    setDownVotes(newDownVotes);
+    updateVideoData({ likes: newUpVotes, dislikes: newDownVotes });
+  };
+
+  const handleDislike = () => {
+    const newVoteStatus = voteStatus === -1 ? 0 : -1;
+    const newDownVotes = voteStatus === -1 ? downVotes - 1 : downVotes + 1;
+    const newUpVotes = voteStatus === 1 ? upVotes - 1 : upVotes;
+    setVoteStatus(newVoteStatus);
+    setUpVotes(newUpVotes);
+    setDownVotes(newDownVotes);
+    updateVideoData({ likes: newUpVotes, dislikes: newDownVotes });
   };
 
   return (
@@ -32,25 +52,21 @@ const VideoMetadata = ({ videoData, users, isDarkMode }) => {
           </div>
           <div className="owner-data">
             <span id="owner-name">{ownerData.username}</span>
-            <span id="info">{ownerData.subscribers}</span>
+            <span id="info">{ownerData.subscribers} subscribers</span>
           </div>
         </div>
         <div className="feedback-container">
           <div className="vote-container">
             <LikeButton
               upVotes={upVotes}
-              setUpVotes={setUpVotes}
               voteStatus={voteStatus}
-              setVoteStatus={setVoteStatus}
-              setDownVotes={setDownVotes}
+              handleLike={handleLike}
               isDarkMode={isDarkMode}
             />
             <DislikeButton
               downVotes={downVotes}
-              setDownVotes={setDownVotes}
               voteStatus={voteStatus}
-              setVoteStatus={setVoteStatus}
-              setUpVotes={setUpVotes}
+              handleDislike={handleDislike}
               isDarkMode={isDarkMode}
             />
           </div>

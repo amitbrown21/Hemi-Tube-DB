@@ -18,33 +18,79 @@ function EditVideo({ currentVideo, videos, setVideos }) {
     }
   }, [currentVideo]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const imageFormats = ["image/png", "image/jpeg", "image/jpg"];
-
-    if (thumbnailFile && !imageFormats.includes(thumbnailFile.type)) {
-      alert("Only PNG, JPG, and JPEG images are allowed.");
-      return;
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setThumbnailFile(reader.result); // Base64 string
+      };
+      reader.readAsDataURL(file);
     }
+  };
 
-    const thumbnailURL = thumbnailFile
-      ? URL.createObjectURL(thumbnailFile)
-      : currentVideo.thumbnail;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     const updatedVideo = {
       ...currentVideo,
       title,
       description,
-      thumbnail: thumbnailURL,
+      thumbnail: thumbnailFile || currentVideo.thumbnail,
     };
 
-    const updatedVideos = videos.map((video) =>
-      video.id === currentVideo.id ? updatedVideo : video
-    );
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedVideo),
+        }
+      );
 
-    setVideos(updatedVideos);
-    setRedirect(true);
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to update video");
+      }
+
+      const result = await res.json();
+      const updatedVideos = videos.map((video) =>
+        video._id === currentVideo._id ? result : video
+      );
+
+      setVideos(updatedVideos);
+      setRedirect(true);
+    } catch (error) {
+      console.error("Error updating video:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to delete video");
+      }
+
+      const updatedVideos = videos.filter(
+        (video) => video._id !== currentVideo._id
+      );
+
+      setVideos(updatedVideos);
+      setRedirect(true);
+    } catch (error) {
+      console.error("Error deleting video:", error);
+    }
   };
 
   if (redirect) {
@@ -87,7 +133,7 @@ function EditVideo({ currentVideo, videos, setVideos }) {
                     </div>
                     <FileInputField
                       accept="image/png, image/jpeg, image/jpg"
-                      onChange={(e) => setThumbnailFile(e.target.files[0])}
+                      onChange={handleFileChange}
                     />
                   </div>
                 </div>
@@ -96,6 +142,13 @@ function EditVideo({ currentVideo, videos, setVideos }) {
             <div className="card-footer">
               <Button type="submit" className="btn btn-primary">
                 Update Video
+              </Button>
+              <Button
+                type="button"
+                className="btn btn-danger"
+                onClick={handleDelete}
+              >
+                Delete Video
               </Button>
             </div>
           </div>
