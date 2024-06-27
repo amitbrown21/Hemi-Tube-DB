@@ -6,6 +6,10 @@ const videosRoutes = require("./routes/videosRoutes");
 
 const app = express();
 
+// Increase the payload limit to handle large Base64 strings
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
 // Middleware
 app.use(cors());
 app.use(express.json());

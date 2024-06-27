@@ -16,6 +16,8 @@ function SignUpPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
 
+  const imageFormats = ["image/png", "image/jpeg", "image/jpg"];
+
   const handleLogoClick = () => {
     <Navigate to="/" />;
   };
@@ -26,6 +28,26 @@ function SignUpPage() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && !imageFormats.includes(file.type)) {
+      alert("Only PNG, JPG, and JPEG images are allowed.");
+      setNewUser((prevState) => ({
+        ...prevState,
+        profilePicture: "default_picture_url",
+      }));
+    } else if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewUser((prevState) => ({
+          ...prevState,
+          profilePicture: reader.result, // Base64 string
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const onConfirmation = (e) => {
@@ -90,6 +112,7 @@ function SignUpPage() {
             <form className="row gt-6" onSubmit={handleSubmit}>
               <div className="col-6">
                 <label className="form-label"></label>
+
                 <input
                   type="text"
                   className="signup-input form-control"
@@ -101,6 +124,7 @@ function SignUpPage() {
                 />
               </div>
               <div className="col-6">
+                <label className="form-label"></label>
                 <input
                   type="text"
                   className="signup-input form-control"
@@ -113,6 +137,7 @@ function SignUpPage() {
               </div>
               <div className="col-12">
                 <label className="form-label"></label>
+
                 <input
                   type="text"
                   className="signup-input form-control"
@@ -125,6 +150,7 @@ function SignUpPage() {
               </div>
               <div className="col-12">
                 <label className="form-label"></label>
+
                 <input
                   type="password"
                   className="form-control"
@@ -142,6 +168,7 @@ function SignUpPage() {
               </div>
               <div className="col-12">
                 <label className="form-label"></label>
+
                 <input
                   type="password"
                   className="signup-input form-control"
@@ -152,8 +179,9 @@ function SignUpPage() {
                   onChange={onConfirmation}
                 />
               </div>
-              <div className="col-4">
+              <div className="col-6">
                 <label className="form-label"></label>
+
                 <select
                   className="signup-input form-select"
                   name="gender"
@@ -164,19 +192,20 @@ function SignUpPage() {
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                   <option value="other">Other</option>
-                  <option value="rather not say">Rather not say</option>
                 </select>
               </div>
-              <div className="col-12">
-                <label className="form-label"></label>
+              <div className="col-8">
+                <label htmlFor="formFile" className="form-label">
+                  Profile Picture (PNG, JPG, JPEG)
+                </label>
                 <input
-                  type="text"
-                  className="signup-input form-control"
-                  placeholder="Profile Picture URL"
-                  required
+                  className="form-control"
+                  type="file"
+                  id="formFile"
                   name="profilePicture"
-                  value={newUser.profilePicture}
-                  onChange={handleChange}
+                  accept="image/png, image/jpeg, image/jpg"
+                  required
+                  onChange={handleFileChange}
                 />
               </div>
               {error && <div className="col-12 error text-danger">{error}</div>}

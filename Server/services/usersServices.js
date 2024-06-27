@@ -1,29 +1,64 @@
 const User = require("../models/userModel");
+const Video = require("../models/videoModel");
 
 const createUser = async (userData) => {
-  const user = new User(userData);
-  return await user.save();
+  try {
+    const user = new User(userData);
+    await user.save();
+    return user;
+  } catch (error) {
+    console.error("Error creating user in usersServices:", error);
+    throw error;
+  }
 };
 
 const getUsers = async () => {
-  return await User.find();
+  try {
+    return await User.find();
+  } catch (error) {
+    console.error("Error fetching users in usersServices:", error);
+    throw error;
+  }
 };
 
 const getUserById = async (id) => {
-  return await User.findById(id);
+  try {
+    return await User.findById(id);
+  } catch (error) {
+    console.error("Error fetching user by ID in usersServices:", error);
+    throw error;
+  }
 };
 
 const updateUser = async (id, updateData) => {
-  return await User.findByIdAndUpdate(id, updateData, { new: true });
+  try {
+    return await User.findByIdAndUpdate(id, updateData, { new: true });
+  } catch (error) {
+    console.error("Error updating user in usersServices:", error);
+    throw error;
+  }
 };
 
 const deleteUser = async (id) => {
-  return await User.findByIdAndDelete(id);
+  try {
+    const user = await User.findByIdAndDelete(id);
+    if (user) {
+      await Video.deleteMany({ owner: user._id });
+    }
+    return user;
+  } catch (error) {
+    console.error("Error deleting user in usersServices:", error);
+    throw error;
+  }
 };
 
-const getUserVideos = async (id) => {
-  const user = await User.findById(id).populate("videosID");
-  return user ? user.videosID : [];
+const getUserVideos = async (userId) => {
+  try {
+    return await Video.find({ owner: userId });
+  } catch (error) {
+    console.error("Error fetching user videos in usersServices:", error);
+    throw error;
+  }
 };
 
 module.exports = {
