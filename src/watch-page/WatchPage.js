@@ -13,7 +13,6 @@ function WatchPage({
   users,
   isDarkMode,
 }) {
-  console.log(currentVideo);
   const [views, setViews] = useState(
     typeof currentVideo.views === "number"
       ? currentVideo.views
@@ -66,11 +65,37 @@ function WatchPage({
     setViewIncremented(false);
   }, [currentVideo]);
 
+  const updateVideoData = async (data) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to update video data");
+      }
+
+      const updatedVideo = await res.json();
+      const updatedVideos = videos.map((video) =>
+        video._id === currentVideo._id ? updatedVideo : video
+      );
+      setVideos(updatedVideos);
+    } catch (error) {
+      console.error("Error updating video data:", error);
+    }
+  };
+
   if (!currentVideo) {
     return <div>Video not found</div>; // Handle case where currentVideo is not found
   }
-
-  console.log("in WatchPage", currentUser);
 
   return (
     <div className={`watch-page-container ${isDarkMode ? "dark-mode" : ""}`}>
@@ -88,8 +113,9 @@ function WatchPage({
           </video>
           <VideoMetadata
             videoData={{ ...currentVideo, views: views.toLocaleString() }}
-            users={users} // Ensure users is passed
-            isDarkMode={isDarkMode} // Pass dark mode to VideoMetadata
+            users={users}
+            isDarkMode={isDarkMode}
+            updateVideoData={updateVideoData}
           />
           <CommentSection
             currentUser={currentUser}
@@ -97,7 +123,7 @@ function WatchPage({
             comments={currentVideo.comments || []}
             videos={videos}
             setVideos={setVideos}
-            isDarkMode={isDarkMode} // Pass dark mode to CommentSection
+            isDarkMode={isDarkMode}
           />
         </div>
         <div className={`side-list ${isDarkMode ? "dark-mode" : ""}`}>
