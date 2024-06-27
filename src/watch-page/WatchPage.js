@@ -103,28 +103,32 @@ function WatchPage({
         <div
           className={`watch-block-container ${isDarkMode ? "dark-mode" : ""}`}
         >
-          <video
-            key={currentVideo.url}
-            controls={true}
-            className="video-player"
-          >
-            <source src={currentVideo.url} type="video/mp4"></source>
-            Your browser does not support the video tag.
-          </video>
-          <VideoMetadata
-            videoData={{ ...currentVideo, views: views.toLocaleString() }}
-            users={users}
-            isDarkMode={isDarkMode}
-            updateVideoData={updateVideoData}
-          />
-          <CommentSection
-            currentUser={currentUser}
-            videoId={currentVideo._id}
-            comments={currentVideo.comments || []}
-            videos={videos}
-            setVideos={setVideos}
-            isDarkMode={isDarkMode}
-          />
+          <div className="video-player-wrapper">
+            <video
+              key={currentVideo.url}
+              controls={true}
+              className="video-player"
+            >
+              <source src={currentVideo.url} type="video/mp4"></source>
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div className="video-info">
+            <VideoMetadata
+              videoData={{ ...currentVideo, views: views.toLocaleString() }}
+              users={users}
+              isDarkMode={isDarkMode}
+              updateVideoData={updateVideoData}
+            />
+            <CommentSection
+              currentUser={currentUser}
+              videoId={currentVideo._id}
+              comments={currentVideo.comments || []}
+              videos={videos}
+              setVideos={setVideos}
+              isDarkMode={isDarkMode}
+            />
+          </div>
         </div>
         <div className={`side-list ${isDarkMode ? "dark-mode" : ""}`}>
           <SideList videos={videos} setCurrentVideo={setCurrentVideo} />
