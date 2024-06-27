@@ -3,7 +3,6 @@ import CompactVideo from "./compact-video/CompactVideo";
 import "./WatchPage.css";
 
 const SideList = ({ videos = [], setCurrentVideo }) => {
-  //Need to update video3 in the db, the video is not there!
   return (
     <div className="side-list-container">
       {videos.length > 0 ? (

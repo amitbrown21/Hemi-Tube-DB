@@ -10,7 +10,6 @@ function WatchPage({
   videos = [],
   setVideos,
   setCurrentVideo,
-  users,
   isDarkMode,
 }) {
   const [views, setViews] = useState(
@@ -116,7 +115,6 @@ function WatchPage({
           <div className="video-info">
             <VideoMetadata
               videoData={{ ...currentVideo, views: views.toLocaleString() }}
-              users={users}
               isDarkMode={isDarkMode}
               updateVideoData={updateVideoData}
             />

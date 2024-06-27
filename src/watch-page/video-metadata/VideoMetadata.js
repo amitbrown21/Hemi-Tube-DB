@@ -1,21 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LikeButton from "../feedback-btn/LikeButton";
 import DislikeButton from "../feedback-btn/DislikeButton";
 import ShareButton from "../feedback-btn/ShareButton";
 import "./VideoMetadata.css";
 import UserPic from "../../components/user-pic/UserPic";
 
-const VideoMetadata = ({ videoData, users, isDarkMode, updateVideoData }) => {
+const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
   const [voteStatus, setVoteStatus] = useState(0); // Initial state is no vote
   const [upVotes, setUpVotes] = useState(videoData.likes); // Track upvote count
   const [downVotes, setDownVotes] = useState(videoData.dislikes); // Track downvote count
-
-  // Find the owner data from the list of users
-  const ownerData = users.find((user) => user._id === videoData.owner) || {
+  const [ownerData, setOwnerData] = useState({
     username: "Unknown",
     subscribers: "0",
     profilePicture: "assets/icons/notLoggedIn.svg",
-  };
+  });
+  const [formattedDate, setFormattedDate] = useState("");
+
+  useEffect(() => {
+    const fetchOwnerData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/users/${videoData.owner}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setOwnerData({
+            username: data.username,
+            subscribers: data.subscribers,
+            profilePicture:
+              data.profilePicture || "assets/icons/notLoggedIn.svg",
+          });
+        } else {
+          console.error("Failed to fetch owner data");
+        }
+      } catch (error) {
+        console.error("Error fetching owner data:", error);
+      }
+    };
+
+    fetchOwnerData();
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    };
+
+    setFormattedDate(formatDate(videoData.date));
+  }, [videoData.owner, videoData.date]);
 
   const handleLike = () => {
     const newVoteStatus = voteStatus === 1 ? 0 : 1;
@@ -83,7 +117,7 @@ const VideoMetadata = ({ videoData, users, isDarkMode, updateVideoData }) => {
             color: isDarkMode ? "#ffffff" : "inherit",
           }}
         >
-          {videoData.views} views &nbsp;{videoData.date}
+          {videoData.views} views &nbsp;{formattedDate}
         </p>
         <p style={{ color: isDarkMode ? "#b3b3b3" : "inherit" }}>
           {videoData.description}
