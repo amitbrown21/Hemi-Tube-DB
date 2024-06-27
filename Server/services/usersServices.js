@@ -30,6 +30,15 @@ const getUserById = async (id) => {
   }
 };
 
+const getUserByUsername = async (username) => {
+  try {
+    return await User.findOne({ username });
+  } catch (error) {
+    console.error("Error fetching user by username in usersServices:", error);
+    throw error;
+  }
+};
+
 const updateUser = async (id, updateData) => {
   try {
     return await User.findByIdAndUpdate(id, updateData, { new: true });
@@ -65,6 +74,7 @@ module.exports = {
   createUser,
   getUsers,
   getUserById,
+  getUserByUsername,
   updateUser,
   deleteUser,
   getUserVideos,
