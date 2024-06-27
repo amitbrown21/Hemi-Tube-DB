@@ -13,27 +13,56 @@ function WatchPage({
   users,
   isDarkMode,
 }) {
+  console.log(currentVideo);
   const [views, setViews] = useState(
-    parseInt(currentVideo.views.replace(/,/g, ""))
+    typeof currentVideo.views === "number"
+      ? currentVideo.views
+      : parseInt(currentVideo.views.replace(/,/g, ""))
   );
   const [viewIncremented, setViewIncremented] = useState(false);
 
   useEffect(() => {
+    const incrementViews = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ views: views + 1 }),
+          }
+        );
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to update views");
+        }
+
+        const updatedVideo = await res.json();
+        const updatedVideos = videos.map((video) =>
+          video._id === currentVideo._id ? updatedVideo : video
+        );
+        setVideos(updatedVideos);
+      } catch (error) {
+        console.error("Error updating views:", error);
+      }
+    };
+
     if (!viewIncremented) {
       setViews((prevViews) => prevViews + 1);
-      const updatedVideos = videos.map((video) => {
-        if (video.id === currentVideo.id) {
-          return { ...video, views: (views + 1).toLocaleString() };
-        }
-        return video;
-      });
-      setVideos(updatedVideos);
+      incrementViews();
       setViewIncremented(true);
     }
   }, [currentVideo, viewIncremented, setVideos, views, videos]);
 
   useEffect(() => {
-    setViews(parseInt(currentVideo.views.replace(/,/g, "")));
+    setViews(
+      typeof currentVideo.views === "number"
+        ? currentVideo.views
+        : parseInt(currentVideo.views.replace(/,/g, ""))
+    );
     setViewIncremented(false);
   }, [currentVideo]);
 
@@ -64,7 +93,7 @@ function WatchPage({
           />
           <CommentSection
             currentUser={currentUser}
-            videoId={currentVideo.id}
+            videoId={currentVideo._id}
             comments={currentVideo.comments || []}
             videos={videos}
             setVideos={setVideos}
