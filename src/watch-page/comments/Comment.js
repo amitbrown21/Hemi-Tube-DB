@@ -20,7 +20,7 @@ const Comment = ({
   };
 
   const handleSave = () => {
-    editComment(comment.id, editedComment);
+    editComment(comment._id, editedComment);
     setIsEditing(false);
   };
 
@@ -68,7 +68,7 @@ const Comment = ({
             currentUser.username === comment.username && (
               <>
                 <button onClick={handleEdit}>Edit</button>
-                <button onClick={() => deleteComment(comment.id)}>
+                <button onClick={() => deleteComment(comment._id)}>
                   Delete
                 </button>
               </>

@@ -6,20 +6,37 @@ import Comment from "./Comment";
 const CommentSection = ({
   currentUser,
   videoId,
-  comments,
   videos,
   setVideos,
   isDarkMode,
 }) => {
-  const [commentList, setCommentList] = useState(comments);
+  const [commentList, setCommentList] = useState([]);
 
   useEffect(() => {
-    setCommentList(comments);
-  }, [comments]);
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments`
+        );
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to fetch comments");
+        }
+
+        const comments = await res.json();
+        setCommentList(comments);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    fetchComments();
+  }, [videoId]);
 
   const updateVideoComments = (videoId, newComments) => {
     const updatedVideos = videos.map((video) => {
-      if (video.id === videoId) {
+      if (video._id === videoId) {
         return { ...video, comments: newComments };
       }
       return video;
@@ -27,29 +44,84 @@ const CommentSection = ({
     setVideos(updatedVideos);
   };
 
-  const handleAddComment = (newComment) => {
-    const updatedComments = [newComment, ...commentList];
-    setCommentList(updatedComments);
-    updateVideoComments(videoId, updatedComments);
-  };
+  const handleAddComment = async (newComment) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newComment),
+        }
+      );
 
-  const handleDeleteComment = (commentId) => {
-    const updatedComments = commentList.filter(
-      (comment) => comment.id !== commentId
-    );
-    setCommentList(updatedComments);
-    updateVideoComments(videoId, updatedComments);
-  };
-
-  const handleEditComment = (commentId, newBody) => {
-    const updatedComments = commentList.map((comment) => {
-      if (comment.id === commentId) {
-        return { ...comment, body: newBody };
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to add comment");
       }
-      return comment;
-    });
-    setCommentList(updatedComments);
-    updateVideoComments(videoId, updatedComments);
+
+      const result = await res.json();
+      const updatedComments = [result, ...commentList];
+      setCommentList(updatedComments);
+      updateVideoComments(videoId, updatedComments);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments/${commentId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to delete comment");
+      }
+
+      const updatedComments = commentList.filter(
+        (comment) => comment._id !== commentId
+      );
+      setCommentList(updatedComments);
+      updateVideoComments(videoId, updatedComments);
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
+  const handleEditComment = async (commentId, newBody) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments/${commentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ body: newBody }),
+        }
+      );
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Failed to edit comment");
+      }
+
+      const result = await res.json();
+      const updatedComments = commentList.map((comment) =>
+        comment._id === commentId ? result : comment
+      );
+      setCommentList(updatedComments);
+      updateVideoComments(videoId, updatedComments);
+    } catch (error) {
+      console.error("Error editing comment:", error);
+    }
   };
 
   return (
@@ -61,9 +133,9 @@ const CommentSection = ({
           addComment={handleAddComment}
         />
       </div>
-      {commentList.map((comment, index) => (
+      {commentList.map((comment) => (
         <Comment
-          key={index}
+          key={comment._id}
           comment={comment}
           deleteComment={handleDeleteComment}
           editComment={handleEditComment}
