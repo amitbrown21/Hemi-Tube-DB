@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import TextareaField from "../components/TextareaField";
 import FileInputField from "../components/FileinputField";
@@ -10,8 +10,8 @@ function UploadVideo({ videos, setVideos, currentUser }) {
   const [description, setDescription] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
-  const [redirect, setRedirect] = useState(false);
   const [duration, setDuration] = useState(null);
+  const navigate = useNavigate();
 
   const formatDuration = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -65,7 +65,7 @@ function UploadVideo({ videos, setVideos, currentUser }) {
     };
   
     try {
-      const token = localStorage.getItem('token'); // Assuming you store the token in localStorage after login
+      const token = localStorage.getItem('token');
       const res = await fetch(
         `http://localhost:3000/api/users/${currentUser._id}/videos`,
         {
@@ -87,12 +87,13 @@ function UploadVideo({ videos, setVideos, currentUser }) {
       const result = await res.json();
       console.log("Video uploaded successfully:", result);
       setVideos([...videos, result]);
-      setRedirect(true);
+      
+      // Redirect to homepage after successful upload
+      navigate('/');
     } catch (error) {
       console.error("Error uploading video:", error);
     }
   };
-
   return (
     <div className="container mt-3">
       <div className="container">

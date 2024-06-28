@@ -16,7 +16,7 @@ const CommentSection = ({
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments`
+          `http://localhost:3000/api/users/${videos.find(v => v._id === videoId).owner}/videos/${videoId}/comments`
         );
 
         if (!res.ok) {
@@ -32,7 +32,7 @@ const CommentSection = ({
     };
 
     fetchComments();
-  }, [videoId]);
+  }, [videoId, videos]);
 
   const updateVideoComments = (videoId, newComments) => {
     const updatedVideos = videos.map((video) => {
@@ -46,12 +46,14 @@ const CommentSection = ({
 
   const handleAddComment = async (newComment) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments`,
+        `http://localhost:3000/api/users/${videos.find(v => v._id === videoId).owner}/videos/${videoId}/comments`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(newComment),
         }
@@ -73,10 +75,14 @@ const CommentSection = ({
 
   const handleDeleteComment = async (commentId) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments/${commentId}`,
+        `http://localhost:3000/api/users/${videos.find(v => v._id === videoId).owner}/videos/${videoId}/comments/${commentId}`,
         {
           method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
         }
       );
 
@@ -97,12 +103,14 @@ const CommentSection = ({
 
   const handleEditComment = async (commentId, newBody) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments/${commentId}`,
+        `http://localhost:3000/api/users/${videos.find(v => v._id === videoId).owner}/videos/${videoId}/comments/${commentId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({ body: newBody }),
         }
