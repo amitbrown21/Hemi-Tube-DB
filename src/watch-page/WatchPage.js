@@ -12,77 +12,79 @@ function WatchPage({
   setCurrentVideo,
   isDarkMode,
 }) {
-  const [views, setViews] = useState(
-    typeof currentVideo.views === "number"
-      ? currentVideo.views
-      : parseInt(currentVideo.views.replace(/,/g, ""))
-  );
-  const [viewIncremented, setViewIncremented] = useState(false);
+  const [videoData, setVideoData] = useState(currentVideo);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    const incrementViews = async () => {
+    const fetchVideoDataAndComments = async () => {
       try {
-        const res = await fetch(
+        const token = localStorage.getItem('token');
+        const videoRes = await fetch(
           `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
           {
-            method: "PUT",
             headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ views: views + 1 }),
+              "Authorization": `Bearer ${token}`
+            }
           }
         );
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(errorText || "Failed to update views");
+        if (!videoRes.ok) {
+          throw new Error("Failed to fetch video data");
         }
 
-        const updatedVideo = await res.json();
+        const updatedVideo = await videoRes.json();
+        setVideoData(updatedVideo);
+
+        const commentsRes = await fetch(
+          `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}/comments`,
+          {
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          }
+        );
+
+        if (!commentsRes.ok) {
+          throw new Error("Failed to fetch comments");
+        }
+
+        const fetchedComments = await commentsRes.json();
+        console.log("Fetched comments:", fetchedComments); // Add this line
+        setComments(fetchedComments);
+
         const updatedVideos = videos.map((video) =>
-          video._id === currentVideo._id ? updatedVideo : video
+          video._id === currentVideo._id ? { ...updatedVideo, comments: fetchedComments } : video
         );
         setVideos(updatedVideos);
       } catch (error) {
-        console.error("Error updating views:", error);
+        console.error("Error fetching video data and comments:", error);
       }
     };
 
-    if (!viewIncremented) {
-      setViews((prevViews) => prevViews + 1);
-      incrementViews();
-      setViewIncremented(true);
-    }
-  }, [currentVideo, viewIncremented, setVideos, views, videos]);
-
-  useEffect(() => {
-    setViews(
-      typeof currentVideo.views === "number"
-        ? currentVideo.views
-        : parseInt(currentVideo.views.replace(/,/g, ""))
-    );
-    setViewIncremented(false);
-  }, [currentVideo]);
+    fetchVideoDataAndComments();
+  }, [currentVideo, setVideos, videos]);
 
   const updateVideoData = async (data) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(
         `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(data),
         }
       );
 
       if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || "Failed to update video data");
+        throw new Error("Failed to update video data");
       }
 
       const updatedVideo = await res.json();
+      setVideoData(updatedVideo);
       const updatedVideos = videos.map((video) =>
         video._id === currentVideo._id ? updatedVideo : video
       );
@@ -92,8 +94,8 @@ function WatchPage({
     }
   };
 
-  if (!currentVideo) {
-    return <div>Video not found</div>; // Handle case where currentVideo is not found
+  if (!videoData) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -104,26 +106,26 @@ function WatchPage({
         >
           <div className="video-player-wrapper">
             <video
-              key={currentVideo.url}
+              key={videoData.url}
               controls={true}
               className="video-player"
             >
-              <source src={currentVideo.url} type="video/mp4"></source>
+              <source src={videoData.url} type="video/mp4"></source>
               Your browser does not support the video tag.
             </video>
           </div>
           <div className="video-info">
             <VideoMetadata
-              videoData={{ ...currentVideo, views: views.toLocaleString() }}
+              videoData={videoData}
               isDarkMode={isDarkMode}
               updateVideoData={updateVideoData}
             />
             <CommentSection
               currentUser={currentUser}
-              videoId={currentVideo._id}
-              comments={currentVideo.comments || []}
-              videos={videos}
-              setVideos={setVideos}
+              videoId={videoData._id}
+              videoOwner={videoData.owner}
+              comments={comments}
+              setComments={setComments}
               isDarkMode={isDarkMode}
             />
           </div>

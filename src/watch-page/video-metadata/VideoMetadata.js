@@ -6,9 +6,9 @@ import "./VideoMetadata.css";
 import UserPic from "../../components/user-pic/UserPic";
 
 const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
-  const [voteStatus, setVoteStatus] = useState(0); // Initial state is no vote
-  const [upVotes, setUpVotes] = useState(videoData.likes); // Track upvote count
-  const [downVotes, setDownVotes] = useState(videoData.dislikes); // Track downvote count
+  const [voteStatus, setVoteStatus] = useState(0);
+  const [upVotes, setUpVotes] = useState(videoData.likes);
+  const [downVotes, setDownVotes] = useState(videoData.dislikes);
   const [ownerData, setOwnerData] = useState({
     username: "Unknown",
     subscribers: "0",
@@ -19,8 +19,14 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
   useEffect(() => {
     const fetchOwnerData = async () => {
       try {
+        const token = localStorage.getItem('token');
         const response = await fetch(
-          `http://localhost:3000/api/users/${videoData.owner}`
+          `http://localhost:3000/api/users/${videoData.owner}`,
+          {
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          }
         );
         if (response.ok) {
           const data = await response.json();
@@ -49,7 +55,9 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
     };
 
     setFormattedDate(formatDate(videoData.date));
-  }, [videoData.owner, videoData.date]);
+    setUpVotes(videoData.likes);
+    setDownVotes(videoData.dislikes);
+  }, [videoData]);
 
   const handleLike = () => {
     const newVoteStatus = voteStatus === 1 ? 0 : 1;

@@ -11,17 +11,24 @@ const commentController = {
       res.status(500).json({ message: error.message });
     }
   },
-
-  createComment: async (req, res) => {
-    try {
-      const videoId = req.params.pid;
-      const newComment = await commentServices.createComment(videoId, req.body);
-      res.status(201).json(newComment);
-    } catch (error) {
-      console.error("Error creating comment:", error);
-      res.status(400).json({ message: error.message });
-    }
-  },
+    createComment: async (req, res) => {
+      try {
+        const videoId = req.params.pid;
+        const { body, username, profilePicture } = req.body;
+        
+        console.log("Creating comment for video:", videoId);
+        console.log("Comment data:", { body, username, profilePicture });
+  
+        const newComment = await commentServices.createComment(videoId, { body, username, profilePicture });
+        
+        console.log("New comment created:", newComment);
+  
+        res.status(201).json(newComment);
+      } catch (error) {
+        console.error("Error creating comment:", error);
+        res.status(400).json({ message: error.message });
+      }
+    },
 
   getCommentById: async (req, res) => {
     try {

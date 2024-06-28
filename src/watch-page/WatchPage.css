@@ -61,6 +61,7 @@
 #info {
   font-size: smaller;
   color: rgb(134, 133, 133);
+  margin-left: 15px;
 }
 
 .watch-page-container.dark-mode {

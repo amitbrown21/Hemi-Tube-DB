@@ -29,12 +29,22 @@ const Comment = ({
     setIsEditing(false);
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const isCommentOwner = currentUser && currentUser.username === comment.username;
+
   return (
     <div className={`comment-container ${isDarkMode ? "dark-mode" : ""}`}>
       <UserPic src={profilePicture} size={35} />
       <div>
         <span className={`commenter-name ${isDarkMode ? "dark-mode" : ""}`}>
           {comment.username}
+        </span>
+        <span className={`comment-date ${isDarkMode ? "dark-mode" : ""}`}>
+          {formatDate(comment.date)}
         </span>
         {isEditing ? (
           <textarea
@@ -64,8 +74,7 @@ const Comment = ({
               <button onClick={handleCancel}>Cancel</button>
             </>
           ) : (
-            currentUser &&
-            currentUser.username === comment.username && (
+            isCommentOwner && (
               <>
                 <button onClick={handleEdit}>Edit</button>
                 <button onClick={() => deleteComment(comment._id)}>

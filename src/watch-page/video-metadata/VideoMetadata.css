@@ -39,13 +39,14 @@
 #owner-icon {
   width: 32px;
   aspect-ratio: 1/1;
-  margin: 10px;
+  margin: 15px;
 }
 
 #owner-name {
   font-weight: bold;
   font-size: 1.1em;
   white-space: nowrap;
+  margin-left: 15px;
 }
 
 .description {
