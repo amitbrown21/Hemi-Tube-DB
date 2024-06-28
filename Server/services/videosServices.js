@@ -1,8 +1,12 @@
 const Video = require("../models/videoModel");
 const User = require("../models/userModel");
 
+
 const createVideo = async (userId, videoData) => {
-  const video = new Video({ ...videoData, owner: userId });
+  const video = new Video({
+    ...videoData,
+    owner: userId
+  });
   await video.save();
   await User.findByIdAndUpdate(userId, { $push: { videosID: video._id } });
   return video;

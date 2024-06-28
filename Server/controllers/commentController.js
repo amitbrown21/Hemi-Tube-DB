@@ -14,12 +14,11 @@ const commentController = {
 
   createComment: async (req, res) => {
     try {
-      const newComment = await commentServices.createComment(
-        req.params.pid,
-        req.body
-      );
+      const videoId = req.params.pid;
+      const newComment = await commentServices.createComment(videoId, req.body);
       res.status(201).json(newComment);
     } catch (error) {
+      console.error("Error creating comment:", error);
       res.status(400).json({ message: error.message });
     }
   },

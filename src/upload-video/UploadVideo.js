@@ -50,45 +50,40 @@ function UploadVideo({ videos, setVideos, currentUser }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!videoFile) {
-      alert("Video file is required.");
+  
+    if (!videoFile || !thumbnailFile) {
+      alert("Video and thumbnail files are required.");
       return;
     }
-
-    if (!thumbnailFile) {
-      alert("Thumbnail file is required.");
-      return;
-    }
-
+  
     const newVideo = {
       title,
       description,
-      url: videoFile, // Rename videoFile to url
-      thumbnail: thumbnailFile, // Rename thumbnailFile to thumbnail
-      owner: currentUser ? currentUser._id : "Unknown",
+      url: videoFile,
+      thumbnail: thumbnailFile,
       duration: duration ? formatDuration(duration) : "00:00",
     };
-
-    // The post request is hard coded to a user i already have
+  
     try {
+      const token = localStorage.getItem('token'); // Assuming you store the token in localStorage after login
       const res = await fetch(
-        `http://localhost:3000/api/users/667d4deda1b04bddd6aadeb9/videos`,
+        `http://localhost:3000/api/users/${currentUser._id}/videos`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(newVideo),
         }
       );
-
+  
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Failed to upload video:", errorText);
         throw new Error(errorText || "Failed to upload video");
       }
-
+  
       const result = await res.json();
       console.log("Video uploaded successfully:", result);
       setVideos([...videos, result]);
@@ -97,10 +92,6 @@ function UploadVideo({ videos, setVideos, currentUser }) {
       console.error("Error uploading video:", error);
     }
   };
-
-  if (redirect) {
-    return <Navigate to="/" />;
-  }
 
   return (
     <div className="container mt-3">
