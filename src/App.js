@@ -9,7 +9,7 @@ import videosDB from "./db/videoData.json";
 import Home from "./home-page/Home";
 import Layout from "./components/Layout/Layout";
 import EditVideo from "./edit-video/EditVideo";
-import UserChannel from './user-page/UserChannel';
+
 function App() {
   const [users, setUsers] = useState(usersDB);
   const [videos, setVideos] = useState(videosDB);
@@ -96,7 +96,6 @@ function App() {
             path="/watchpage/:videoID"
             element={<WatchPage {...props} isDarkMode={isDarkMode} />}
           />
-          <Route path="/channel/:userId" element={<UserChannel />} />
         </Route>
         <Route path="/login" element={<LogIn {...props} />} />
         <Route path="/uploadvideo" element={<UploadVideo {...props} />} />

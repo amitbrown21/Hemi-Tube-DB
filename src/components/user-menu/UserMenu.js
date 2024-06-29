@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import "./UserMenu.css";
 
 function UserMenu({ currentUser, onLogout }) {
@@ -12,22 +11,11 @@ function UserMenu({ currentUser, onLogout }) {
   return (
     <div className="user-menu">
       <button className="icon-button" onClick={toggleMenu}>
-        <img 
-          src={currentUser?.profilePicture || "assets/img/user_icon.ico"} 
-          alt="User" 
-          className="user-icon" 
-        />
+        <img src={currentUser?.profilePicture || "assets/img/user_icon.ico"} alt="User" className="user-icon" />
       </button>
       {isOpen && (
         <div className="user-dropdown-menu">
-          <Link 
-            to={`/channel/${currentUser._id}`} 
-            className="dropdown-item"
-            onClick={() => setIsOpen(false)}
-          >
-            My Channel
-          </Link>
-          <button onClick={onLogout} className="dropdown-item">Logout</button>
+          <button onClick={onLogout}>Logout</button>
         </div>
       )}
     </div>
