@@ -30,7 +30,14 @@ const commentServices = {
     const comment = video.comments.find((c) => c._id.equals(commentId));
     return comment || null;
   },
-
+  getCommentsByVideoId: async (videoId) => {
+    const video = await Video.findById(videoId).populate({
+      path: 'comments',
+      options: { sort: { 'date': -1 } } // Sort comments by date, newest first
+    });
+    if (!video) throw new Error("Video not found");
+    return video.comments;
+  },
   updateComment: async (videoId, commentId, updateData) => {
     const video = await Video.findById(videoId).populate("comments");
     if (!video) throw new Error("Video not found");
