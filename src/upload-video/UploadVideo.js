@@ -65,7 +65,7 @@ function UploadVideo({ videos, setVideos, currentUser }) {
     };
   
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const res = await fetch(
         `http://localhost:3000/api/users/${currentUser._id}/videos`,
         {

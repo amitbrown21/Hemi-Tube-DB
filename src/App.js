@@ -18,7 +18,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     
     if (token) {
       // First, verify the token
@@ -54,7 +54,7 @@ function App() {
       })
       .catch(error => {
         console.error('Error during auto-login:', error);
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
       });
     }
   }, []);

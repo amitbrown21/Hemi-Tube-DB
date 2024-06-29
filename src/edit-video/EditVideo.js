@@ -51,7 +51,7 @@ function EditVideo({ currentVideo, videos, setVideos, currentUser }) {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem('token')}`, // Add the token
+            "Authorization": `Bearer ${sessionStorage.getItem('token')}`, // Add the token
           },
           body: JSON.stringify(updatedVideo),
         }
@@ -81,7 +81,7 @@ function EditVideo({ currentVideo, videos, setVideos, currentUser }) {
         {
           method: "DELETE",
           headers: {
-            "Authorization": `Bearer ${localStorage.getItem('token')}`, // Add the token
+            "Authorization": `Bearer ${sessionStorage.getItem('token')}`, // Add the token
           },
         }
       );
