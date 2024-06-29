@@ -8,46 +8,56 @@ import UserPic from "../../components/user-pic/UserPic";
 
 const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
   const [voteStatus, setVoteStatus] = useState(0);
-  const [upVotes, setUpVotes] = useState(0);
-  const [downVotes, setDownVotes] = useState(0);
+  const [upVotes, setUpVotes] = useState(videoData.likes);
+  const [downVotes, setDownVotes] = useState(videoData.dislikes);
+  const [ownerData, setOwnerData] = useState({
+    username: "Unknown",
+    subscribers: "0",
+    profilePicture: "assets/icons/notLoggedIn.svg",
+  });
   const [formattedDate, setFormattedDate] = useState("");
-  const [ownerData, setOwnerData] = useState(null);
 
   useEffect(() => {
-    console.log("Video Data in VideoMetadata:", videoData);
-
-    if (videoData) {
-      const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-        return `${day}.${month}.${year}`;
-      };
-
-      setFormattedDate(formatDate(videoData.date));
-      setUpVotes(videoData.likes);
-      setDownVotes(videoData.dislikes);
-
-      const fetchOwnerData = async () => {
-        try {
-          console.log("Fetching owner data...");
-          const response = await fetch(`http://localhost:3000/api/users/${videoData.owner}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch owner data');
+    const fetchOwnerData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(
+          `http://localhost:3000/api/users/${videoData.owner}`,
+          {
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
           }
+        );
+        if (response.ok) {
           const data = await response.json();
-          console.log("Fetched owner data:", data);
-          setOwnerData(data);
-        } catch (error) {
-          console.error('Error fetching owner data:', error);
+          setOwnerData({
+            username: data.username,
+            subscribers: data.subscribers,
+            profilePicture:
+              data.profilePicture || "assets/icons/notLoggedIn.svg",
+          });
+        } else {
+          console.error("Failed to fetch owner data");
         }
-      };
-  
-      fetchOwnerData();
-    } else {
-      console.log("Video data is not available yet");
-    }
+      } catch (error) {
+        console.error("Error fetching owner data:", error);
+      }
+    };
+
+    fetchOwnerData();
+
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    };
+
+    setFormattedDate(formatDate(videoData.date));
+    setUpVotes(videoData.likes);
+    setDownVotes(videoData.dislikes);
   }, [videoData]);
 
   const handleLike = () => {
@@ -69,14 +79,6 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
     setDownVotes(newDownVotes);
     updateVideoData({ likes: newUpVotes, dislikes: newDownVotes });
   };
-
-  console.log("Current state:", { videoData, ownerData });
-
-if (!videoData || !ownerData) {
-  return <div>Loading video metadata...</div>;
-}
-
-
 
   return (
     <div className={isDarkMode ? "dark-mode" : ""}>

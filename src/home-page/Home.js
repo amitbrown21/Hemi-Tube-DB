@@ -34,50 +34,7 @@ function HomePage({
     };
 
     fetchVideos();
-    // Add token check
-    const token = sessionStorage.getItem('token');
-  console.log("Token from sessionStorage:", token); // Debug log
-
-  if (token && !currentUser) {
-    console.log("Attempting to verify token"); // Debug log
-    fetch('http://localhost:3000/api/users/verify-token', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    .then(response => {
-      console.log("Token verification response:", response.status); // Debug log
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Invalid token');
-      }
-    })
-    .then(data => {
-      console.log("Verified user ID:", data.userId); // Debug log
-      return fetch(`http://localhost:3000/api/users/${data.userId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Failed to fetch user data');
-      }
-    })
-    .then(userData => {
-      console.log("Fetched user data:", userData); // Debug log
-      setCurrentUser(userData);
-    })
-    .catch(error => {
-      console.error('Error during auto-login:', error);
-      sessionStorage.removeItem('token');
-    });
-  }
-}, [setVideos, setCurrentUser, currentUser]);
+  }, [setVideos]);
 
   console.log("in HomePage", currentUser);
 

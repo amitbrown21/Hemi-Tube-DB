@@ -69,16 +69,6 @@ const commentController = {
       res.status(500).json({ message: error.message });
     }
   },
-  getCommentsByVideoId: async (req, res) => {
-    try {
-      const { pid } = req.params; // Assuming 'pid' is your video ID parameter
-      const comments = await commentServices.getCommentsByVideoId(pid);
-      res.json(comments);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      res.status(500).json({ message: error.message });
-    }
-  },
 };
 
 module.exports = commentController;

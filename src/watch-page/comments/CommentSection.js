@@ -11,18 +11,15 @@ const CommentSection = ({
   setComments,
   isDarkMode,
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [commentList, setCommentList] = useState(comments);
 
   useEffect(() => {
-    if (comments) {
-      setIsLoading(false);
-    }
+    setCommentList(comments);
   }, [comments]);
 
   const handleAddComment = async (newComment) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
       
       console.log("Submitting new comment:", newComment);
   
@@ -49,16 +46,16 @@ const CommentSection = ({
       const result = await res.json();
       console.log("Result:", result);
   
+      setCommentList(prevComments => [result, ...prevComments]);
       setComments(prevComments => [result, ...prevComments]);
     } catch (error) {
       console.error("Error adding comment:", error);
-      setError("Failed to add comment. Please try again.");
     }
   };
   
   const handleDeleteComment = async (commentId) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
       const res = await fetch(
         `http://localhost:3000/api/users/${videoOwner}/videos/${videoId}/comments/${commentId}`,
         {
@@ -74,16 +71,19 @@ const CommentSection = ({
         throw new Error(errorText || "Failed to delete comment");
       }
 
-      setComments(prevComments => prevComments.filter(comment => comment._id !== commentId));
+      const updatedComments = commentList.filter(
+        (comment) => comment._id !== commentId
+      );
+      setCommentList(updatedComments);
+      setComments(updatedComments);
     } catch (error) {
       console.error("Error deleting comment:", error);
-      setError("Failed to delete comment. Please try again.");
     }
   };
 
   const handleEditComment = async (commentId, newBody) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = localStorage.getItem('token');
       const res = await fetch(
         `http://localhost:3000/api/users/${videoOwner}/videos/${videoId}/comments/${commentId}`,
         {
@@ -102,46 +102,35 @@ const CommentSection = ({
       }
 
       const result = await res.json();
-      setComments(prevComments => prevComments.map(comment => 
+      const updatedComments = commentList.map((comment) =>
         comment._id === commentId ? result : comment
-      ));
+      );
+      setCommentList(updatedComments);
+      setComments(updatedComments);
     } catch (error) {
       console.error("Error editing comment:", error);
-      setError("Failed to edit comment. Please try again.");
     }
   };
-
-  if (isLoading) {
-    return <div>Loading comments...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <div className="comment-section">
       <div className="comment-header">
-        <h3>Comments ({comments.length})</h3>
+        <h3>Comments</h3>
         <SubmitComment
           currentUser={currentUser}
           addComment={handleAddComment}
         />
       </div>
-      {comments.length > 0 ? (
-        comments.map((comment) => (
-          <Comment
-            key={comment._id}
-            comment={comment}
-            deleteComment={handleDeleteComment}
-            editComment={handleEditComment}
-            isDarkMode={isDarkMode}
-            currentUser={currentUser}
-          />
-        ))
-      ) : (
-        <p>No comments yet. Be the first to comment!</p>
-      )}
+      {commentList.map((comment) => (
+        <Comment
+          key={comment._id}
+          comment={comment}
+          deleteComment={handleDeleteComment}
+          editComment={handleEditComment}
+          isDarkMode={isDarkMode}
+          currentUser={currentUser}
+        />
+      ))}
     </div>
   );
 };

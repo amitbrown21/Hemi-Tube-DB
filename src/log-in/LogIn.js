@@ -23,7 +23,7 @@ function LogIn({ setCurrentUser }) {
       }
 
       const { token, userId } = await loginResponse.json();
-      sessionStorage.setItem("token", token);
+      localStorage.setItem("token", token);
       
       // Get user details
       const userResponse = await fetch(`http://localhost:3000/api/users/${userId}`, {
