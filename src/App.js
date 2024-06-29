@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WatchPage from "./watch-page/WatchPage";
 import LogIn from "./log-in/LogIn";
@@ -16,6 +16,48 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentVideo, setCurrentVideo] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+      // First, verify the token
+      fetch('http://localhost:3000/api/users/verify-token', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Invalid token');
+        }
+      })
+      .then(data => {
+        // If token is valid, fetch user data
+        return fetch(`http://localhost:3000/api/users/${data.userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch user data');
+        }
+      })
+      .then(userData => {
+        setCurrentUser(userData);
+      })
+      .catch(error => {
+        console.error('Error during auto-login:', error);
+        localStorage.removeItem('token');
+      });
+    }
+  }, []);
 
   const props = {
     users,

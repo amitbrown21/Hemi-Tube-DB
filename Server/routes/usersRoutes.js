@@ -10,6 +10,7 @@ router.post("/", usersController.createUser);
 router.post("/login", usersController.login);
 
 // Protected routes
+router.get("/verify-token", authMiddleware, usersController.verifyToken);
 router.get("/", authMiddleware, usersController.getAllUsers);
 router.get("/:id", authMiddleware, usersController.getUserById);
 router.put("/:id", authMiddleware, usersController.updateUser);
