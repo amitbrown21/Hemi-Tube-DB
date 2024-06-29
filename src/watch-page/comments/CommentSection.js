@@ -6,77 +6,63 @@ import Comment from "./Comment";
 const CommentSection = ({
   currentUser,
   videoId,
-  videos,
-  setVideos,
+  videoOwner,
+  comments,
+  setComments,
   isDarkMode,
 }) => {
-  const [commentList, setCommentList] = useState([]);
+  const [commentList, setCommentList] = useState(comments);
 
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments`
-        );
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(errorText || "Failed to fetch comments");
-        }
-
-        const comments = await res.json();
-        setCommentList(comments);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
-
-    fetchComments();
-  }, [videoId]);
-
-  const updateVideoComments = (videoId, newComments) => {
-    const updatedVideos = videos.map((video) => {
-      if (video._id === videoId) {
-        return { ...video, comments: newComments };
-      }
-      return video;
-    });
-    setVideos(updatedVideos);
-  };
+    setCommentList(comments);
+  }, [comments]);
 
   const handleAddComment = async (newComment) => {
     try {
+      const token = localStorage.getItem('token');
+      
+      console.log("Submitting new comment:", newComment);
+  
       const res = await fetch(
-        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments`,
+        `http://localhost:3000/api/users/${videoOwner}/videos/${videoId}/comments`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(newComment),
         }
       );
-
+  
+      console.log("Response status:", res.status);
+  
       if (!res.ok) {
         const errorText = await res.text();
+        console.error("Error response text:", errorText);
         throw new Error(errorText || "Failed to add comment");
       }
-
+  
       const result = await res.json();
-      const updatedComments = [result, ...commentList];
-      setCommentList(updatedComments);
-      updateVideoComments(videoId, updatedComments);
+      console.log("Result:", result);
+  
+      setCommentList(prevComments => [result, ...prevComments]);
+      setComments(prevComments => [result, ...prevComments]);
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
-
+  
   const handleDeleteComment = async (commentId) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments/${commentId}`,
+        `http://localhost:3000/api/users/${videoOwner}/videos/${videoId}/comments/${commentId}`,
         {
           method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
         }
       );
 
@@ -89,7 +75,7 @@ const CommentSection = ({
         (comment) => comment._id !== commentId
       );
       setCommentList(updatedComments);
-      updateVideoComments(videoId, updatedComments);
+      setComments(updatedComments);
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
@@ -97,12 +83,14 @@ const CommentSection = ({
 
   const handleEditComment = async (commentId, newBody) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:3000/api/users/667d5c85a1b04bddd6aadfcd/videos/${videoId}/comments/${commentId}`,
+        `http://localhost:3000/api/users/${videoOwner}/videos/${videoId}/comments/${commentId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({ body: newBody }),
         }
@@ -118,7 +106,7 @@ const CommentSection = ({
         comment._id === commentId ? result : comment
       );
       setCommentList(updatedComments);
-      updateVideoComments(videoId, updatedComments);
+      setComments(updatedComments);
     } catch (error) {
       console.error("Error editing comment:", error);
     }

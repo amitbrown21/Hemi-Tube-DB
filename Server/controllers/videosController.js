@@ -24,12 +24,25 @@ const videosController = {
 
   createVideo: async (req, res) => {
     try {
-      const newVideo = await videosServices.createVideo(
-        req.params.id,
-        req.body
-      );
+      const userId = req.params.id;
+      const { title, description, url, thumbnail, duration } = req.body;
+  
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+
+      const newVideo = await videosServices.createVideo(userId, {
+        title,
+        description,
+        url,
+        thumbnail,
+        duration,
+        owner: userId
+      });
+  
       res.status(201).json(newVideo);
     } catch (error) {
+      console.error("Error creating video:", error);
       res.status(400).json({ message: error.message });
     }
   },

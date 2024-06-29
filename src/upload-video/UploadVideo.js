@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import TextareaField from "../components/TextareaField";
 import FileInputField from "../components/FileinputField";
@@ -10,8 +10,8 @@ function UploadVideo({ videos, setVideos, currentUser }) {
   const [description, setDescription] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
-  const [redirect, setRedirect] = useState(false);
   const [duration, setDuration] = useState(null);
+  const navigate = useNavigate();
 
   const formatDuration = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -50,58 +50,50 @@ function UploadVideo({ videos, setVideos, currentUser }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!videoFile) {
-      alert("Video file is required.");
+  
+    if (!videoFile || !thumbnailFile) {
+      alert("Video and thumbnail files are required.");
       return;
     }
-
-    if (!thumbnailFile) {
-      alert("Thumbnail file is required.");
-      return;
-    }
-
+  
     const newVideo = {
       title,
       description,
-      url: videoFile, // Rename videoFile to url
-      thumbnail: thumbnailFile, // Rename thumbnailFile to thumbnail
-      owner: currentUser ? currentUser._id : "Unknown",
+      url: videoFile,
+      thumbnail: thumbnailFile,
       duration: duration ? formatDuration(duration) : "00:00",
     };
-
-    // The post request is hard coded to a user i already have
+  
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:3000/api/users/667d4deda1b04bddd6aadeb9/videos`,
+        `http://localhost:3000/api/users/${currentUser._id}/videos`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(newVideo),
         }
       );
-
+  
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Failed to upload video:", errorText);
         throw new Error(errorText || "Failed to upload video");
       }
-
+  
       const result = await res.json();
       console.log("Video uploaded successfully:", result);
       setVideos([...videos, result]);
-      setRedirect(true);
+      
+      // Redirect to homepage after successful upload
+      navigate('/');
     } catch (error) {
       console.error("Error uploading video:", error);
     }
   };
-
-  if (redirect) {
-    return <Navigate to="/" />;
-  }
-
   return (
     <div className="container mt-3">
       <div className="container">

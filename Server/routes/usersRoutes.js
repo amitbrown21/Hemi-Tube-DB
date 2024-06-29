@@ -3,35 +3,30 @@ const router = express.Router();
 const usersController = require("../controllers/usersController");
 const videosController = require("../controllers/videosController");
 const commentController = require("../controllers/commentController");
+const authMiddleware = require("../middleware/auth");
 
-// User routes
-router.get("/", usersController.getAllUsers);
+// Public routes
 router.post("/", usersController.createUser);
-router.get("/:id", usersController.getUserById);
-router.put("/:id", usersController.updateUser);
-router.delete("/:id", usersController.deleteUser);
+router.post("/login", usersController.login);
+
+// Protected routes
+router.get("/", authMiddleware, usersController.getAllUsers);
+router.get("/:id", authMiddleware, usersController.getUserById);
+router.put("/:id", authMiddleware, usersController.updateUser);
+router.delete("/:id", authMiddleware, usersController.deleteUser);
 
 // Video routes under a user
-router.get("/:id/videos", usersController.getUserVideos);
-router.post("/:id/videos", videosController.createVideo);
-router.get("/:id/videos/:pid", videosController.getVideoById);
-router.put("/:id/videos/:pid", videosController.updateVideo);
-router.delete("/:id/videos/:pid", videosController.deleteVideo);
+router.get("/:id/videos", authMiddleware, usersController.getUserVideos);
+router.post("/:id/videos", authMiddleware, videosController.createVideo);
+router.get("/:id/videos/:pid", authMiddleware, videosController.getVideoById);
+router.put("/:id/videos/:pid", authMiddleware, videosController.updateVideo);
+router.delete("/:id/videos/:pid", authMiddleware, videosController.deleteVideo);
 
 // Comment routes under a video of a user
-router.get("/:id/videos/:pid/comments", commentController.getCommentsByVideoId);
-router.post("/:id/videos/:pid/comments", commentController.createComment);
-router.get(
-  "/:id/videos/:pid/comments/:commentId",
-  commentController.getCommentById
-);
-router.put(
-  "/:id/videos/:pid/comments/:commentId",
-  commentController.updateComment
-);
-router.delete(
-  "/:id/videos/:pid/comments/:commentId",
-  commentController.deleteComment
-);
+router.get("/:id/videos/:pid/comments", authMiddleware, commentController.getCommentsByVideoId);
+router.post("/:id/videos/:pid/comments", authMiddleware, commentController.createComment);
+router.get("/:id/videos/:pid/comments/:commentId", authMiddleware, commentController.getCommentById);
+router.put("/:id/videos/:pid/comments/:commentId", authMiddleware, commentController.updateComment);
+router.delete("/:id/videos/:pid/comments/:commentId", authMiddleware, commentController.deleteComment);
 
 module.exports = router;

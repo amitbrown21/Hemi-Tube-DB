@@ -6,19 +6,19 @@ import "../feedback-btn/Feedback.css";
 const SubmitComment = ({ currentUser, addComment }) => {
   const [focus, setFocus] = useState(false);
   const [commentBody, setCommentBody] = useState("");
-  console.log("In SubmitComment", currentUser);
 
   const defaultProfilePicture = "assets/icons/notLoggedIn.svg";
   const profilePicture = currentUser?.profilePicture || defaultProfilePicture;
 
-  const onComment = () => {
+  const onComment = async (e) => {
+    e.preventDefault();
     if (commentBody.trim() !== "") {
       const newComment = {
         body: commentBody,
         username: currentUser?.username || "Unknown",
         profilePicture: profilePicture,
       };
-      addComment(newComment);
+      await addComment(newComment);
       setCommentBody("");
     }
   };
@@ -39,7 +39,7 @@ const SubmitComment = ({ currentUser, addComment }) => {
     <div>
       <div className="user-comment-container">
         <UserPic src={profilePicture} size={40} />
-        <form className="submit-comment-container">
+        <form className="submit-comment-container" onSubmit={onComment}>
           <input
             placeholder="Add a comment"
             value={commentBody}
@@ -48,19 +48,19 @@ const SubmitComment = ({ currentUser, addComment }) => {
             onBlur={() => setFocus(false)}
           ></input>
           <hr style={{ margin: "0px" }} />
+          <div
+            className={`comment-submit-buttons ${
+              focus || commentBody !== "" ? "visible" : "hidden"
+            }`}
+          >
+            <button type="submit" className="feedback-button">
+              Comment
+            </button>
+            <button type="button" onClick={onCancel} className="feedback-button">
+              Cancel
+            </button>
+          </div>
         </form>
-      </div>
-      <div
-        className={`comment-submit-buttons ${
-          focus || commentBody !== "" ? "visible" : "hidden"
-        }`}
-      >
-        <button type="button" onClick={onComment} className="feedback-button">
-          Comment
-        </button>
-        <button type="button" onClick={onCancel} className="feedback-button">
-          Cancel
-        </button>
       </div>
     </div>
   );

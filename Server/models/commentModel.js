@@ -13,10 +13,14 @@ const commentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  video: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Video',
+    required: true
+  },
   date: {
     type: Date,
-    required: true,
-    default: Date.now, // Set the default to the current date
+    default: Date.now,
   },
 });
 

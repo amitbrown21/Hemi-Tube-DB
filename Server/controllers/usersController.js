@@ -1,4 +1,5 @@
 const usersServices = require("../services/usersServices");
+const tokensServices = require("../services/tokensServices");
 
 const usersController = {
   getAllUsers: async (req, res) => {
@@ -76,6 +77,22 @@ const usersController = {
       res.json(videos);
     } catch (error) {
       res.status(500).json({ message: error.message });
+    }
+  },
+
+  login: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      console.log('Login attempt for username:', username);
+      
+      const { token, userId } = await tokensServices.createToken(username, password);
+      
+      console.log('Login successful for user:', userId);
+      res.json({ token, userId });
+    } catch (error) {
+      console.error('Login error:', error.message);
+      console.error('Stack trace:', error.stack);
+      res.status(401).json({ message: "Invalid username or password" });
     }
   },
 };

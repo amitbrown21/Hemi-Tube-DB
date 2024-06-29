@@ -23,6 +23,10 @@ Our team started the development process by focusing on the website. We divided 
   - JavaScript
   - React
 
+- Back-end:
+  - MongoDB
+  - Javascript
+
 ### Android App
 
 - Language: Java
@@ -32,8 +36,9 @@ Our team started the development process by focusing on the website. We divided 
 ### Website
 
 - Clone the repository: git clone https://github.com/amitbrown21/Hemi-Tube-DB
-- Install dependencies: npm install
-- Start the development server: npm start
+- Install dependencies for both the main react app and the 'Server' folder: npm install express mongoose jsonwebtoken
+- Start the server: node /Server/app.js
+- Start the development server: npm start, then click 'Y'.
 - Open the website in your browser at http://localhost:3000
 
 ### Android App

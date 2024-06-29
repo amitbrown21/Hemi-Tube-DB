@@ -2,21 +2,46 @@ import React, { useState } from "react";
 import LoginForm from "./LoginForm";
 import { Navigate, Link } from "react-router-dom";
 
-function LogIn({ setCurrentUser, users }) {
+function LogIn({ setCurrentUser }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [wrongUsername, setWrongUsername] = useState(false);
+  const [error, setError] = useState("");
 
-  const validateUser = (username, password) => {
-    const user = users.find(
-      (tempUser) =>
-        tempUser.username === username && tempUser.password === password
-    );
+  const handleLogin = async (username, password) => {
+    try {
+      // Login request
+      const loginResponse = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (user) {
-      setCurrentUser(user);
+      if (!loginResponse.ok) {
+        const errorData = await loginResponse.json();
+        throw new Error(errorData.message || "Invalid username or password");
+      }
+
+      const { token, userId } = await loginResponse.json();
+      localStorage.setItem("token", token);
+      
+      // Get user details
+      const userResponse = await fetch(`http://localhost:3000/api/users/${userId}`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user details");
+      }
+
+      const userData = await userResponse.json();
+      setCurrentUser(userData);
       setIsAuthenticated(true);
-    } else {
-      setWrongUsername(true);
+    } catch (error) {
+      setError(error.message);
+      console.error("Login error:", error);
     }
   };
 
@@ -28,9 +53,6 @@ function LogIn({ setCurrentUser, users }) {
     return <Navigate to="/" />;
   }
 
-  <Link to="/" className="logo-link" onClick={handleLogoClick}>
-    <img src="assets/img/youtube_logo.png" alt="YouTube Logo" className="p-2" />
-  </Link>;
   return (
     <div className="container mt-5 pt-5">
       <div className="row">
@@ -46,10 +68,8 @@ function LogIn({ setCurrentUser, users }) {
           <h4 className="lh-1">videos on YouTube.</h4>
         </div>
         <div className="offset-lg-0 col-lg-6">
-          <LoginForm onSubmit={validateUser} />
-          {wrongUsername && (
-            <h4 className="ps-3 text-danger">Wrong username or password!</h4>
-          )}
+          <LoginForm onSubmit={handleLogin} />
+          {error && <h4 className="ps-3 text-danger">{error}</h4>}
         </div>
       </div>
     </div>
