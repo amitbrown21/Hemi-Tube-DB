@@ -48,6 +48,8 @@
 }
 .commenter-name {
   font-weight: bold;
+  margin-left: 14px;
+  margin-right: 14px;
 }
 .comment-buttons button {
   margin-right: 7px;

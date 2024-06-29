@@ -47,6 +47,12 @@
   font-size: 1.1em;
   white-space: nowrap;
   margin-left: 15px;
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent */
+}
+
+#owner-name:hover {
+  text-decoration: none; /* Remove underline on hover */
 }
 
 .description {
@@ -59,6 +65,7 @@
 .description p {
   margin: 0px;
 }
+
 .video-metadata.dark-mode .video-title {
   color: #ffffff;
 }

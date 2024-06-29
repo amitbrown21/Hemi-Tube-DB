@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import LikeButton from "../feedback-btn/LikeButton";
 import DislikeButton from "../feedback-btn/DislikeButton";
 import ShareButton from "../feedback-btn/ShareButton";
@@ -71,11 +72,9 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
 
   console.log("Current state:", { videoData, ownerData });
 
-if (!videoData || !ownerData) {
-  return <div>Loading video metadata...</div>;
-}
-
-
+  if (!videoData || !ownerData) {
+    return <div>Loading video metadata...</div>;
+  }
 
   return (
     <div className={isDarkMode ? "dark-mode" : ""}>
@@ -85,13 +84,17 @@ if (!videoData || !ownerData) {
       <div className={`video-metadata ${isDarkMode ? "dark-mode" : ""}`}>
         <div className="owner-container">
           <div>
-            <UserPic
-              src={ownerData.profilePicture || "assets/icons/notLoggedIn.svg"}
-              size={32}
-            />
+            <Link to={`/channel/${ownerData._id}`}>
+              <UserPic
+                src={ownerData.profilePicture || "assets/icons/notLoggedIn.svg"}
+                size={32}
+              />
+            </Link>
           </div>
           <div className="owner-data">
-            <span id="owner-name">{ownerData.username}</span>
+            <Link to={`/channel/${ownerData._id}`} id="owner-name">
+              {ownerData.username}
+            </Link>
             <span id="info">{ownerData.subscribers} subscribers</span>
           </div>
         </div>
