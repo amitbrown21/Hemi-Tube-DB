@@ -29,30 +29,16 @@ function HomePage({
           throw new Error(errorText || "Failed to fetch videos");
         }
         const data = await res.json();
-        setVideos(data);
-
-        // Sort videos by views in descending order
-        const sortedVideos = [...data].sort((a, b) => b.views - a.views);
-
-        // Set top 10 videos
-        setTopVideos(sortedVideos.slice(0, 10));
-
-        // Shuffle remaining videos
-        const remainingVideos = sortedVideos.slice(10);
-        for (let i = remainingVideos.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [remainingVideos[i], remainingVideos[j]] = [
-            remainingVideos[j],
-            remainingVideos[i],
-          ];
-        }
-        setOtherVideos(remainingVideos);
+        setTopVideos(data.topVideos);
+        setOtherVideos(data.otherVideos);
+        setVideos([...data.topVideos, ...data.otherVideos]);
       } catch (error) {
         console.error("Error fetching videos:", error);
       }
     };
 
     fetchVideos();
+
     // Add token check
     const token = sessionStorage.getItem("token");
     console.log("Token from sessionStorage:", token); // Debug log
@@ -114,9 +100,12 @@ function HomePage({
 
   const renderVideoGrid = (videoList, title) => (
     <div className="video-section">
-      <h2 className={`section-title ${isDarkMode ? "dark-mode" : ""}`}>
-        {title}
-      </h2>
+      <div className="section-title-container">
+        <h2 className={`section-title ${isDarkMode ? "dark-mode" : ""}`}>
+          {title}
+        </h2>
+        <div className="section-title-underline"></div>
+      </div>
       <div className="video-grid">
         {videoList
           .filter((video) =>

@@ -45,6 +45,28 @@ const incrementDislikes = async (id) => {
   return await Video.findByIdAndUpdate(id, { $inc: { dislikes: 1 } }, { new: true });
 };
 
+const getVideosWithTopAndRandom = async () => {
+  const allVideos = await Video.find().populate('owner', 'username');
+  
+  // Sort videos by views in descending order
+  allVideos.sort((a, b) => b.views - a.views);
+  
+  // Get top 10 videos
+  const topVideos = allVideos.slice(0, 10);
+  
+  // Shuffle remaining videos
+  const remainingVideos = allVideos.slice(10);
+  for (let i = remainingVideos.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [remainingVideos[i], remainingVideos[j]] = [remainingVideos[j], remainingVideos[i]];
+  }
+  
+  return {
+    topVideos,
+    otherVideos: remainingVideos
+  };
+};
+
 module.exports = {
   createVideo,
   getVideos,
@@ -54,4 +76,5 @@ module.exports = {
   incrementViews,
   incrementLikes,
   incrementDislikes,
+  getVideosWithTopAndRandom,
 };
