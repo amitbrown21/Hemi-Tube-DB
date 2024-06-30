@@ -24,6 +24,21 @@
   color: #b3b3b3;
 }
 
+.video-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+.section-title.dark-mode {
+  color: #ffffff;
+}
+
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -91,14 +106,14 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  flex-grow: 1; /* Add this line */
+  flex-grow: 1;
 }
 
 .edit-icon {
   font-size: 16px;
   color: #606060;
   cursor: pointer;
-  margin-left: 8px; /* Add some spacing between the title and the icon */
+  margin-left: 8px;
 }
 
 .edit-icon:hover {
