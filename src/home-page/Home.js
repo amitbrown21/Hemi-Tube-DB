@@ -130,7 +130,7 @@ function HomePage({
                   >
                     {video.title}
                   </h4>
-                  {currentUser && currentUser._id == video.owner && (
+                  {currentUser && currentUser._id == video.owner._id && (
                     <Link
                       to="/editvideo"
                       onClick={() => handleVideoClick(video)}
