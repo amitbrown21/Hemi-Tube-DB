@@ -1,5 +1,5 @@
 # About
-This project is a YouTube clone developed by a team of three, Omri, Shon and Amit. It consists of a [website](https://github.com/amitbrown21/Hemi-Tube-DB) and an [Android app](https://github.com/amitbrown21/Hemi-Tube-Android-DB) that aim to replicate the core functionalities of YouTube.
+This project is a YouTube clone developed by a team of two, Omri, Shon and Amit. It consists of a [website](https://github.com/amitbrown21/Hemi-Tube-DB) and an [Android app](https://github.com/amitbrown21/Hemi-Tube-Android-DB) that aim to replicate the core functionalities of YouTube.
 
 ## Building process
 
@@ -7,11 +7,12 @@ Our team started the development process by focusing on the website. We divided 
 
 ## Features
 
-- User registration and authentication
-- Video upload and management
-- Video playback and streaming
-- Search functionality
-- User comments and likes on videos
+- User registration and authentication.
+- Video upload and management.
+- Video playback and streaming.
+- Search functionality.
+- User comments, views and likes on videos.
+- Channel page for a user with his videos.
 
 ## Technologies Used
 ### Website
