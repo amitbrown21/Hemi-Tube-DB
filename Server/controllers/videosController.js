@@ -120,6 +120,14 @@ const videosController = {
       res.status(500).json({ message: error.message });
     }
   },
+  getAllVideosWithTopAndRandom: async (req, res) => {
+    try {
+      const videos = await videosServices.getVideosWithTopAndRandom();
+      res.json(videos);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
 
 module.exports = videosController;
