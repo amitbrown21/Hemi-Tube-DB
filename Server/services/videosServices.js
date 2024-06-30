@@ -54,16 +54,19 @@ const getVideosWithTopAndRandom = async () => {
   // Get top 10 videos
   const topVideos = allVideos.slice(0, 10);
   
-  // Shuffle remaining videos
   const remainingVideos = allVideos.slice(10);
-  for (let i = remainingVideos.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [remainingVideos[i], remainingVideos[j]] = [remainingVideos[j], remainingVideos[i]];
+  let randomizedVideos = [];
+
+  // Shuffle and select up to 10 videos
+  for (let i = 0; i < 10 && remainingVideos.length > 0; i++) {
+    const randomIndex = Math.floor(Math.random() * remainingVideos.length);
+    randomizedVideos.push(remainingVideos[randomIndex]);
+    remainingVideos.splice(randomIndex, 1);
   }
-  
+
   return {
     topVideos,
-    otherVideos: remainingVideos
+    otherVideos: randomizedVideos  // Changed from remainingVideos to randomizedVideos
   };
 };
 
