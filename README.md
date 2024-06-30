@@ -37,9 +37,10 @@ Our team started the development process by focusing on the website. We divided 
 
 - Clone the repository: git clone https://github.com/amitbrown21/Hemi-Tube-DB
 - Install dependencies for both the main react app and the 'Server' folder: npm install express mongoose jsonwebtoken
+- Run the scripts in the 'Scripts' folder: first   'node .\uploadUsers.js' then 'node .\uploadVideos.js'.
 - Start the server: node /Server/app.js
 - Start the development server: npm start, then click 'Y'.
-- Open the website in your browser at http://localhost:3000
+- Open the website in your browser at http://localhost:3001
 
 ### Android App
 

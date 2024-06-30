@@ -14,18 +14,14 @@ function WatchPage({
 }) {
   const [videoData, setVideoData] = useState(currentVideo);
   const [comments, setComments] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchVideoDataAndComments = async () => {
       try {
-        const token = localStorage.getItem('token');
+        // Fetch video data
         const videoRes = await fetch(
-          `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
-          {
-            headers: {
-              "Authorization": `Bearer ${token}`
-            }
-          }
+          `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`
         );
 
         if (!videoRes.ok) {
@@ -33,40 +29,78 @@ function WatchPage({
         }
 
         const updatedVideo = await videoRes.json();
-        setVideoData(updatedVideo);
+        console.log("Fetched video data:", updatedVideo);
 
+        // Fetch owner data
+        const ownerRes = await fetch(
+          `http://localhost:3000/api/users/${updatedVideo.owner}`
+        );
+
+        if (!ownerRes.ok) {
+          throw new Error("Failed to fetch owner data");
+        }
+
+        const ownerData = await ownerRes.json();
+        console.log("Fetched owner data:", ownerData);
+
+        // Combine video and owner data
+        const videoWithOwnerData = {
+          ...updatedVideo,
+          owner: ownerData
+        };
+
+        setVideoData(videoWithOwnerData);
+
+        // Fetch comments
         const commentsRes = await fetch(
-          `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}/comments`,
-          {
-            headers: {
-              "Authorization": `Bearer ${token}`
-            }
-          }
+          `http://localhost:3000/api/users/${updatedVideo.owner}/videos/${updatedVideo._id}/comments`
         );
 
         if (!commentsRes.ok) {
-          throw new Error("Failed to fetch comments");
+          const errorText = await commentsRes.text();
+          console.error("Comments fetch error:", errorText);
+          throw new Error(`Failed to fetch comments: ${errorText}`);
         }
 
         const fetchedComments = await commentsRes.json();
-        console.log("Fetched comments:", fetchedComments); // Add this line
+        console.log("Fetched comments in WatchPage:", fetchedComments);
         setComments(fetchedComments);
 
-        const updatedVideos = videos.map((video) =>
-          video._id === currentVideo._id ? { ...updatedVideo, comments: fetchedComments } : video
-        );
-        setVideos(updatedVideos);
+        // Increment views
+        const incrementViews = async () => {
+          try {
+            const response = await fetch(
+              `http://localhost:3000/api/videos/${currentVideo._id}/incrementViews`,
+              {
+                method: 'POST',
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error('Failed to increment views');
+            }
+
+            const incrementedVideo = await response.json();
+            setVideoData(incrementedVideo);
+          } catch (error) {
+            console.error('Error incrementing views:', error);
+          }
+        };
+
+        incrementViews();
+
       } catch (error) {
         console.error("Error fetching video data and comments:", error);
+        setError(error.message);
       }
     };
 
     fetchVideoDataAndComments();
-  }, [currentVideo, setVideos, videos]);
+  }, [currentVideo]);
 
   const updateVideoData = async (data) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const res = await fetch(
         `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
         {
@@ -94,10 +128,15 @@ function WatchPage({
     }
   };
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   if (!videoData) {
     return <div>Loading...</div>;
   }
 
+  console.log("Passing videoData to VideoMetadata:", videoData);
   return (
     <div className={`watch-page-container ${isDarkMode ? "dark-mode" : ""}`}>
       <div className={`content-container ${isDarkMode ? "dark-mode" : ""}`}>
@@ -123,7 +162,7 @@ function WatchPage({
             <CommentSection
               currentUser={currentUser}
               videoId={videoData._id}
-              videoOwner={videoData.owner}
+              videoOwner={videoData.owner._id || videoData.owner}
               comments={comments}
               setComments={setComments}
               isDarkMode={isDarkMode}

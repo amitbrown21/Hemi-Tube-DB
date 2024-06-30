@@ -95,6 +95,10 @@ const usersController = {
       res.status(401).json({ message: "Invalid username or password" });
     }
   },
+  verifyToken: async (req, res) => {
+    // If the request reaches here, the token is valid (thanks to authMiddleware)
+    res.json({ userId: req.userId });
+  },
 };
 
 module.exports = usersController;

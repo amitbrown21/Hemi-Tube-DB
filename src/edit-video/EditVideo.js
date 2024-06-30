@@ -5,7 +5,7 @@ import TextareaField from "../components/TextareaField";
 import FileInputField from "../components/FileinputField";
 import Button from "../components/Button";
 
-function EditVideo({ currentVideo, videos, setVideos }) {
+function EditVideo({ currentVideo, videos, setVideos, currentUser }) {
   const [title, setTitle] = useState(currentVideo.title);
   const [description, setDescription] = useState(currentVideo.description);
   const [thumbnailFile, setThumbnailFile] = useState(null);
@@ -17,6 +17,11 @@ function EditVideo({ currentVideo, videos, setVideos }) {
       setDescription(currentVideo.description);
     }
   }, [currentVideo]);
+
+  // Check if the current user is the owner of the video
+  if (!currentUser || currentUser._id !== currentVideo.owner) {
+    return <Navigate to="/" />;
+  }
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -46,6 +51,7 @@ function EditVideo({ currentVideo, videos, setVideos }) {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem('token')}`, // Add the token
           },
           body: JSON.stringify(updatedVideo),
         }
@@ -74,6 +80,9 @@ function EditVideo({ currentVideo, videos, setVideos }) {
         `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
         {
           method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${sessionStorage.getItem('token')}`, // Add the token
+          },
         }
       );
 

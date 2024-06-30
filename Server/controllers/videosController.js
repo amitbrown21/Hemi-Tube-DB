@@ -26,7 +26,7 @@ const videosController = {
     try {
       const userId = req.params.id;
       const { title, description, url, thumbnail, duration } = req.body;
-  
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -39,7 +39,7 @@ const videosController = {
         duration,
         owner: userId
       });
-  
+
       res.status(201).json(newVideo);
     } catch (error) {
       console.error("Error creating video:", error);
@@ -49,13 +49,20 @@ const videosController = {
 
   updateVideo: async (req, res) => {
     try {
-      const updatedVideo = await videosServices.updateVideo(
-        req.params.pid,
-        req.body
-      );
-      if (!updatedVideo) {
+      const userId = req.user.userId; // Get the authenticated user's ID
+      const videoId = req.params.pid;
+
+      const video = await videosServices.getVideoById(videoId);
+      if (!video) {
         return res.status(404).json({ message: "Video not found" });
       }
+
+      // Check if the authenticated user is the owner of the video
+      if (video.owner.toString() !== userId) {
+        return res.status(403).json({ message: "You are not authorized to edit this video" });
+      }
+
+      const updatedVideo = await videosServices.updateVideo(videoId, req.body);
       res.json(updatedVideo);
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -64,11 +71,51 @@ const videosController = {
 
   deleteVideo: async (req, res) => {
     try {
-      const deletedVideo = await videosServices.deleteVideo(req.params.pid);
-      if (!deletedVideo) {
+      const userId = req.user.userId; // Get the authenticated user's ID
+      const videoId = req.params.pid;
+
+      const video = await videosServices.getVideoById(videoId);
+      if (!video) {
         return res.status(404).json({ message: "Video not found" });
       }
-      res.json({ message: "Video deleted successfully" });
+
+      // Check if the authenticated user is the owner of the video
+      if (video.owner.toString() !== userId) {
+        return res.status(403).json({ message: "You are not authorized to delete this video" });
+      }
+
+      await videosServices.deleteVideo(videoId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  },
+
+  incrementViews: async (req, res) => {
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.incrementViews(videoId);
+      res.json(updatedVideo);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  incrementLikes: async (req, res) => {
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.incrementLikes(videoId);
+      res.json(updatedVideo);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  incrementDislikes: async (req, res) => {
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.incrementDislikes(videoId);
+      res.json(updatedVideo);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
