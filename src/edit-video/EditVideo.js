@@ -19,7 +19,10 @@ function EditVideo({ currentVideo, videos, setVideos, currentUser }) {
   }, [currentVideo]);
 
   // Check if the current user is the owner of the video
-  if (!currentUser || currentUser._id !== currentVideo.owner) {
+  if (
+    !currentUser ||
+    currentUser._id !== (currentVideo.owner._id || currentVideo.owner)
+  ) {
     return <Navigate to="/" />;
   }
 
@@ -51,7 +54,7 @@ function EditVideo({ currentVideo, videos, setVideos, currentUser }) {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${sessionStorage.getItem('token')}`, // Add the token
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Add the token
           },
           body: JSON.stringify(updatedVideo),
         }
@@ -81,7 +84,7 @@ function EditVideo({ currentVideo, videos, setVideos, currentUser }) {
         {
           method: "DELETE",
           headers: {
-            "Authorization": `Bearer ${sessionStorage.getItem('token')}`, // Add the token
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Add the token
           },
         }
       );

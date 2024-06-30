@@ -15,8 +15,13 @@ const commentSchema = new mongoose.Schema({
   },
   video: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Video',
-    required: true
+    ref: "Video",
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
   date: {
     type: Date,

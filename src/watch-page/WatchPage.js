@@ -46,7 +46,7 @@ function WatchPage({
         // Combine video and owner data
         const videoWithOwnerData = {
           ...updatedVideo,
-          owner: ownerData
+          owner: ownerData,
         };
 
         setVideoData(videoWithOwnerData);
@@ -65,30 +65,6 @@ function WatchPage({
         const fetchedComments = await commentsRes.json();
         console.log("Fetched comments in WatchPage:", fetchedComments);
         setComments(fetchedComments);
-
-        // Increment views
-        const incrementViews = async () => {
-          try {
-            const response = await fetch(
-              `http://localhost:3000/api/videos/${currentVideo._id}/incrementViews`,
-              {
-                method: 'POST',
-              }
-            );
-
-            if (!response.ok) {
-              throw new Error('Failed to increment views');
-            }
-
-            const incrementedVideo = await response.json();
-            setVideoData(incrementedVideo);
-          } catch (error) {
-            console.error('Error incrementing views:', error);
-          }
-        };
-
-        incrementViews();
-
       } catch (error) {
         console.error("Error fetching video data and comments:", error);
         setError(error.message);
@@ -98,16 +74,40 @@ function WatchPage({
     fetchVideoDataAndComments();
   }, [currentVideo]);
 
+  useEffect(() => {
+    const incrementViews = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/videos/${currentVideo._id}/incrementViews`,
+          {
+            method: "POST",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to increment views");
+        }
+
+        const incrementedVideo = await response.json();
+        setVideoData(incrementedVideo);
+      } catch (error) {
+        console.error("Error incrementing views:", error);
+      }
+    };
+
+    incrementViews();
+  }, [currentVideo]);
+
   const updateVideoData = async (data) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       const res = await fetch(
         `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         }
@@ -144,11 +144,7 @@ function WatchPage({
           className={`watch-block-container ${isDarkMode ? "dark-mode" : ""}`}
         >
           <div className="video-player-wrapper">
-            <video
-              key={videoData.url}
-              controls={true}
-              className="video-player"
-            >
+            <video key={videoData.url} controls={true} className="video-player">
               <source src={videoData.url} type="video/mp4"></source>
               Your browser does not support the video tag.
             </video>

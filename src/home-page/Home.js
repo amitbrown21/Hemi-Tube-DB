@@ -38,49 +38,49 @@ function HomePage({
     };
 
     fetchVideos();
-    
+
     // Add token check
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem("token");
     console.log("Token from sessionStorage:", token); // Debug log
 
     if (token && !currentUser) {
       console.log("Attempting to verify token"); // Debug log
-      fetch('http://localhost:3000/api/users/verify-token', {
+      fetch("http://localhost:3000/api/users/verify-token", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .then(response => {
-        console.log("Token verification response:", response.status); // Debug log
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Invalid token');
-        }
-      })
-      .then(data => {
-        console.log("Verified user ID:", data.userId); // Debug log
-        return fetch(`http://localhost:3000/api/users/${data.userId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        .then((response) => {
+          console.log("Token verification response:", response.status); // Debug log
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Invalid token");
           }
+        })
+        .then((data) => {
+          console.log("Verified user ID:", data.userId); // Debug log
+          return fetch(`http://localhost:3000/api/users/${data.userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Failed to fetch user data");
+          }
+        })
+        .then((userData) => {
+          console.log("Fetched user data:", userData); // Debug log
+          setCurrentUser(userData);
+        })
+        .catch((error) => {
+          console.error("Error during auto-login:", error);
+          sessionStorage.removeItem("token");
         });
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to fetch user data');
-        }
-      })
-      .then(userData => {
-        console.log("Fetched user data:", userData); // Debug log
-        setCurrentUser(userData);
-      })
-      .catch(error => {
-        console.error('Error during auto-login:', error);
-        sessionStorage.removeItem('token');
-      });
     }
   }, [setVideos, setCurrentUser, currentUser]);
 
@@ -101,44 +101,53 @@ function HomePage({
   const renderVideoGrid = (videoList, title) => (
     <div className="video-section">
       <div className="section-title-container">
-        <h2 className={`section-title ${isDarkMode ? "dark-mode" : ""}`}>{title}</h2>
+        <h2 className={`section-title ${isDarkMode ? "dark-mode" : ""}`}>
+          {title}
+        </h2>
         <div className="section-title-underline"></div>
       </div>
       <div className="video-grid">
-        {videoList.filter((video) =>
-          video.title.toLowerCase().includes(searchQuery.toLowerCase())
-        ).map((video) => (
-          <div key={video._id} className="video-card">
-            <div className="video-thumbnail-container">
-              <Link to="/watchpage" onClick={() => handleVideoClick(video)}>
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="video-thumbnail"
-                />
-                <span className="video-duration">{video.duration}</span>
-              </Link>
-            </div>
-            <div className="video-info">
-              <div className="title-edit-container">
-                <h4 className={`video-title ${isDarkMode ? "dark-mode" : ""}`}>
-                  {video.title}
-                </h4>
-                {currentUser && (
-                  <Link to="/editvideo" onClick={() => handleVideoClick(video)}>
-                    <i className="bi bi-pencil-square edit-icon"></i>
-                  </Link>
-                )}
+        {videoList
+          .filter((video) =>
+            video.title.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((video) => (
+            <div key={video._id} className="video-card">
+              <div className="video-thumbnail-container">
+                <Link to="/watchpage" onClick={() => handleVideoClick(video)}>
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="video-thumbnail"
+                  />
+                  <span className="video-duration">{video.duration}</span>
+                </Link>
               </div>
-              <p className={`video-owner ${isDarkMode ? "dark-mode" : ""}`}>
-                {video.owner.username}
-              </p>
-              <p className={`video-stats ${isDarkMode ? "dark-mode" : ""}`}>
-                {video.views} views • {formatDate(video.date)}
-              </p>
+              <div className="video-info">
+                <div className="title-edit-container">
+                  <h4
+                    className={`video-title ${isDarkMode ? "dark-mode" : ""}`}
+                  >
+                    {video.title}
+                  </h4>
+                  {currentUser && currentUser._id == video.owner._id && (
+                    <Link
+                      to="/editvideo"
+                      onClick={() => handleVideoClick(video)}
+                    >
+                      <i className="bi bi-pencil-square edit-icon"></i>
+                    </Link>
+                  )}
+                </div>
+                <p className={`video-owner ${isDarkMode ? "dark-mode" : ""}`}>
+                  {video.owner.username}
+                </p>
+                <p className={`video-stats ${isDarkMode ? "dark-mode" : ""}`}>
+                  {video.views} views • {formatDate(video.date)}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
