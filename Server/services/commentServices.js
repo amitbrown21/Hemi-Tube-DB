@@ -1,7 +1,6 @@
 const Video = require("../models/videoModel");
 const Comment = require("../models/commentModel");
 
-
 const commentServices = {
   createComment: async (videoId, commentData) => {
     const video = await Video.findById(videoId);
@@ -9,11 +8,12 @@ const commentServices = {
 
     const comment = new Comment({
       ...commentData,
-      video: videoId  // Associate the comment with the video
+      video: videoId, // Associate the comment with the video
+      userId: commentData.userId, // Add the userId
     });
-    
+
     const savedComment = await comment.save();
-    
+
     // Add the comment to the video's comments array
     video.comments.push(savedComment._id);
     await video.save();
@@ -30,14 +30,16 @@ const commentServices = {
     const comment = video.comments.find((c) => c._id.equals(commentId));
     return comment || null;
   },
+
   getCommentsByVideoId: async (videoId) => {
     const video = await Video.findById(videoId).populate({
-      path: 'comments',
-      options: { sort: { 'date': -1 } } // Sort comments by date, newest first
+      path: "comments",
+      options: { sort: { date: -1 } }, // Sort comments by date, newest first
     });
     if (!video) throw new Error("Video not found");
     return video.comments;
   },
+
   updateComment: async (videoId, commentId, updateData) => {
     const video = await Video.findById(videoId).populate("comments");
     if (!video) throw new Error("Video not found");

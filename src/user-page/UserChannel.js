@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link ,useNavigate} from 'react-router-dom';
-import './UserChannel.css';
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import "./UserChannel.css";
 
 function UserChannel({ setCurrentVideo, isDarkMode }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { userId } = useParams();
   const [userData, setUserData] = useState(null);
   const [userVideos, setUserVideos] = useState([]);
@@ -14,11 +14,15 @@ function UserChannel({ setCurrentVideo, isDarkMode }) {
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
-        const userResponse = await fetch(`http://localhost:3000/api/users/${userId}`);
-        const videosResponse = await fetch(`http://localhost:3000/api/users/${userId}/videos`);
-        
+        const userResponse = await fetch(
+          `http://localhost:3000/api/users/${userId}`
+        );
+        const videosResponse = await fetch(
+          `http://localhost:3000/api/users/${userId}/videos`
+        );
+
         if (!userResponse.ok || !videosResponse.ok) {
-          throw new Error('Failed to fetch data');
+          throw new Error("Failed to fetch data");
         }
 
         const userData = await userResponse.json();
@@ -37,8 +41,9 @@ function UserChannel({ setCurrentVideo, isDarkMode }) {
   }, [userId]);
 
   const handleVideoClick = (video) => {
-    setCurrentVideo(video);
-    navigate(`/watchpage/${video._id}`);
+    console.log("Video clicked:", video); // Log the video object
+    //setCurrentVideo(video);
+    //navigate(`/watchpage/${video._id}`);
   };
 
   const formatDate = (dateString) => {
@@ -60,7 +65,11 @@ function UserChannel({ setCurrentVideo, isDarkMode }) {
   return (
     <div className={`user-channel ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="user-info">
-        <img src={userData.profilePicture} alt={userData.username} className="large-profile-pic" />
+        <img
+          src={userData.profilePicture}
+          alt={userData.username}
+          className="large-profile-pic"
+        />
         <div className="user-text-info">
           <h2>{userData.username}</h2>
           <p>{userData.subscribers} subscribers</p>

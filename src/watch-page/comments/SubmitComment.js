@@ -17,6 +17,7 @@ const SubmitComment = ({ currentUser, addComment }) => {
         body: commentBody,
         username: currentUser?.username || "Unknown",
         profilePicture: profilePicture,
+        userId: currentUser?._id, // Add userId here
       };
       await addComment(newComment);
       setCommentBody("");
@@ -56,7 +57,11 @@ const SubmitComment = ({ currentUser, addComment }) => {
             <button type="submit" className="feedback-button">
               Comment
             </button>
-            <button type="button" onClick={onCancel} className="feedback-button">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="feedback-button"
+            >
               Cancel
             </button>
           </div>
