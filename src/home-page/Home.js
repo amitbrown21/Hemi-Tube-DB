@@ -11,47 +11,58 @@ function HomePage({
   setCurrentUser,
   currentVideo,
   setCurrentVideo,
-  searchQuery = "",
-  setSearchQuery,
   isDarkMode,
 }) {
   const [searchParams] = useSearchParams();
-  searchQuery = searchParams.get("search") || "";
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [topVideos, setTopVideos] = useState([]);
   const [otherVideos, setOtherVideos] = useState([]);
+  const [allVideos, setAllVideos] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchInitialVideos = async () => {
       try {
         const res = await fetch("http://localhost:3000/api/videos");
         if (!res.ok) {
           const errorText = await res.text();
-          throw new Error(errorText || "Failed to fetch videos");
+          throw new Error(errorText || "Failed to fetch initial videos");
         }
         const data = await res.json();
         setTopVideos(data.topVideos);
         setOtherVideos(data.otherVideos);
         setVideos([...data.topVideos, ...data.otherVideos]);
       } catch (error) {
-        console.error("Error fetching videos:", error);
+        console.error("Error fetching initial videos:", error);
       }
     };
 
-    fetchVideos();
+    const fetchAllVideos = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/videos/all");
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to fetch all videos");
+        }
+        const data = await res.json();
+        setAllVideos(data);
+      } catch (error) {
+        console.error("Error fetching all videos:", error);
+      }
+    };
 
-    // Add token check
+    fetchInitialVideos();
+    fetchAllVideos();
+
+    // Token check and user verification
     const token = sessionStorage.getItem("token");
-    console.log("Token from sessionStorage:", token); // Debug log
-
     if (token && !currentUser) {
-      console.log("Attempting to verify token"); // Debug log
       fetch("http://localhost:3000/api/users/verify-token", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => {
-          console.log("Token verification response:", response.status); // Debug log
           if (response.ok) {
             return response.json();
           } else {
@@ -59,7 +70,6 @@ function HomePage({
           }
         })
         .then((data) => {
-          console.log("Verified user ID:", data.userId); // Debug log
           return fetch(`http://localhost:3000/api/users/${data.userId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -74,7 +84,6 @@ function HomePage({
           }
         })
         .then((userData) => {
-          console.log("Fetched user data:", userData); // Debug log
           setCurrentUser(userData);
         })
         .catch((error) => {
@@ -84,7 +93,11 @@ function HomePage({
     }
   }, [setVideos, setCurrentUser, currentUser]);
 
-  console.log("in HomePage", currentUser);
+  useEffect(() => {
+    const newSearchQuery = searchParams.get("search") || "";
+    setSearchQuery(newSearchQuery);
+    setIsSearching(!!newSearchQuery);
+  }, [searchParams]);
 
   const handleVideoClick = (video) => {
     setCurrentVideo(video);
@@ -107,55 +120,61 @@ function HomePage({
         <div className="section-title-underline"></div>
       </div>
       <div className="video-grid">
-        {videoList
-          .filter((video) =>
-            video.title.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-          .map((video) => (
-            <div key={video._id} className="video-card">
-              <div className="video-thumbnail-container">
-                <Link to="/watchpage" onClick={() => handleVideoClick(video)}>
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    className="video-thumbnail"
-                  />
-                  <span className="video-duration">{video.duration}</span>
-                </Link>
-              </div>
-              <div className="video-info">
-                <div className="title-edit-container">
-                  <h4
-                    className={`video-title ${isDarkMode ? "dark-mode" : ""}`}
-                  >
-                    {video.title}
-                  </h4>
-                  {currentUser && currentUser._id == video.owner._id && (
-                    <Link
-                      to="/editvideo"
-                      onClick={() => handleVideoClick(video)}
-                    >
-                      <i className="bi bi-pencil-square edit-icon"></i>
-                    </Link>
-                  )}
-                </div>
-                <p className={`video-owner ${isDarkMode ? "dark-mode" : ""}`}>
-                  {video.owner.username}
-                </p>
-                <p className={`video-stats ${isDarkMode ? "dark-mode" : ""}`}>
-                  {video.views} views • {formatDate(video.date)}
-                </p>
-              </div>
+        {videoList.map((video) => (
+          <div key={video._id} className="video-card">
+            <div className="video-thumbnail-container">
+              <Link to="/watchpage" onClick={() => handleVideoClick(video)}>
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  className="video-thumbnail"
+                />
+                <span className="video-duration">{video.duration}</span>
+              </Link>
             </div>
-          ))}
+            <div className="video-info">
+              <div className="title-edit-container">
+                <h4
+                  className={`video-title ${isDarkMode ? "dark-mode" : ""}`}
+                >
+                  {video.title}
+                </h4>
+                {currentUser && currentUser._id === video.owner._id && (
+                  <Link
+                    to="/editvideo"
+                    onClick={() => handleVideoClick(video)}
+                  >
+                    <i className="bi bi-pencil-square edit-icon"></i>
+                  </Link>
+                )}
+              </div>
+              <p className={`video-owner ${isDarkMode ? "dark-mode" : ""}`}>
+                {video.owner.username}
+              </p>
+              <p className={`video-stats ${isDarkMode ? "dark-mode" : ""}`}>
+                {video.views} views • {formatDate(video.date)}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 
+  const filteredVideos = allVideos.filter((video) =>
+    video.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className={`homepage-root ${isDarkMode ? "dark-mode" : ""}`}>
-      {renderVideoGrid(topVideos, "Top 10 Most Viewed Videos")}
-      {renderVideoGrid(otherVideos, "All Other Videos")}
+      {isSearching ? (
+        renderVideoGrid(filteredVideos, `Search Results for "${searchQuery}"`)
+      ) : (
+        <>
+          {renderVideoGrid(topVideos, "Top 10 Most Viewed Videos")}
+          {renderVideoGrid(otherVideos, "Other Videos")}
+        </>
+      )}
     </div>
   );
 }

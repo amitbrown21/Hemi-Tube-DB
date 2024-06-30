@@ -63,7 +63,7 @@ const getVideosWithTopAndRandom = async () => {
   
   return {
     topVideos,
-    otherVideos: remainingVideos
+    otherVideos: remainingVideos.slice(0, 10)  // Return only 10 random videos
   };
 };
 
