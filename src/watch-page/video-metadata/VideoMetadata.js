@@ -31,14 +31,16 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
 
       const fetchOwnerData = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/api/users/${videoData.owner}`);
+          const response = await fetch(
+            `http://localhost:3000/api/users/${videoData.owner}`
+          );
           if (!response.ok) {
-            throw new Error('Failed to fetch owner data');
+            throw new Error("Failed to fetch owner data");
           }
           const data = await response.json();
           setOwnerData(data);
         } catch (error) {
-          console.error('Error fetching owner data:', error);
+          console.error("Error fetching owner data:", error);
         }
       };
 
@@ -48,35 +50,41 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
 
   const handleLike = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/videos/${videoData._id}/incrementLikes`, {
-        method: 'POST',
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/videos/${videoData._id}/incrementLikes`,
+        {
+          method: "POST",
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to increment likes');
+        throw new Error("Failed to increment likes");
       }
       const updatedVideo = await response.json();
       setUpVotes(updatedVideo.likes);
       setVoteStatus(voteStatus === 1 ? 0 : 1);
       updateVideoData(updatedVideo);
     } catch (error) {
-      console.error('Error incrementing likes:', error);
+      console.error("Error incrementing likes:", error);
     }
   };
 
   const handleDislike = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/videos/${videoData._id}/incrementDislikes`, {
-        method: 'POST',
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/videos/${videoData._id}/incrementDislikes`,
+        {
+          method: "POST",
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to increment dislikes');
+        throw new Error("Failed to increment dislikes");
       }
       const updatedVideo = await response.json();
       setDownVotes(updatedVideo.dislikes);
       setVoteStatus(voteStatus === -1 ? 0 : -1);
       updateVideoData(updatedVideo);
     } catch (error) {
-      console.error('Error incrementing dislikes:', error);
+      console.error("Error incrementing dislikes:", error);
     }
   };
 

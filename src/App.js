@@ -9,7 +9,7 @@ import videosDB from "./db/videoData.json";
 import Home from "./home-page/Home";
 import Layout from "./components/Layout/Layout";
 import EditVideo from "./edit-video/EditVideo";
-import UserChannel from './user-page/UserChannel';
+import UserChannel from "./user-page/UserChannel";
 
 function App() {
   const [users, setUsers] = useState(usersDB);
@@ -19,44 +19,44 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const token = sessionStorage.getItem('token');
-    
+    const token = sessionStorage.getItem("token");
+
     if (token) {
       // First, verify the token
-      fetch('http://localhost:3000/api/users/verify-token', {
+      fetch("http://localhost:3000/api/users/verify-token", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Invalid token');
-        }
-      })
-      .then(data => {
-        // If token is valid, fetch user data
-        return fetch(`http://localhost:3000/api/users/${data.userId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Invalid token");
           }
+        })
+        .then((data) => {
+          // If token is valid, fetch user data
+          return fetch(`http://localhost:3000/api/users/${data.userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Failed to fetch user data");
+          }
+        })
+        .then((userData) => {
+          setCurrentUser(userData);
+        })
+        .catch((error) => {
+          console.error("Error during auto-login:", error);
+          sessionStorage.removeItem("token");
         });
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to fetch user data');
-        }
-      })
-      .then(userData => {
-        setCurrentUser(userData);
-      })
-      .catch(error => {
-        console.error('Error during auto-login:', error);
-        sessionStorage.removeItem('token');
-      });
     }
   }, []);
 
