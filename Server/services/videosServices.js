@@ -1,7 +1,6 @@
 const Video = require("../models/videoModel");
 const User = require("../models/userModel");
 
-
 const createVideo = async (userId, videoData) => {
   const video = new Video({
     ...videoData,
@@ -34,10 +33,25 @@ const deleteVideo = async (id) => {
   return video;
 };
 
+const incrementViews = async (id) => {
+  return await Video.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true });
+};
+
+const incrementLikes = async (id) => {
+  return await Video.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true });
+};
+
+const incrementDislikes = async (id) => {
+  return await Video.findByIdAndUpdate(id, { $inc: { dislikes: 1 } }, { new: true });
+};
+
 module.exports = {
   createVideo,
   getVideos,
   getVideoById,
   updateVideo,
   deleteVideo,
+  incrementViews,
+  incrementLikes,
+  incrementDislikes,
 };

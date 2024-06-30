@@ -26,7 +26,7 @@ const videosController = {
     try {
       const userId = req.params.id;
       const { title, description, url, thumbnail, duration } = req.body;
-  
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -39,7 +39,7 @@ const videosController = {
         duration,
         owner: userId
       });
-  
+
       res.status(201).json(newVideo);
     } catch (error) {
       console.error("Error creating video:", error);
@@ -84,8 +84,38 @@ const videosController = {
         return res.status(403).json({ message: "You are not authorized to delete this video" });
       }
 
-      const deletedVideo = await videosServices.deleteVideo(videoId);
-      res.json({ message: "Video deleted successfully" });
+      await videosServices.deleteVideo(videoId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  },
+
+  incrementViews: async (req, res) => {
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.incrementViews(videoId);
+      res.json(updatedVideo);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  incrementLikes: async (req, res) => {
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.incrementLikes(videoId);
+      res.json(updatedVideo);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
+  incrementDislikes: async (req, res) => {
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.incrementDislikes(videoId);
+      res.json(updatedVideo);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

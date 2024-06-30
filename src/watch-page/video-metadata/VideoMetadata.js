@@ -10,12 +10,11 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
   const [voteStatus, setVoteStatus] = useState(0);
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
+  const [views, setViews] = useState(0);
   const [formattedDate, setFormattedDate] = useState("");
   const [ownerData, setOwnerData] = useState(null);
 
   useEffect(() => {
-    console.log("Video Data in VideoMetadata:", videoData);
-
     if (videoData) {
       const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -28,49 +27,58 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
       setFormattedDate(formatDate(videoData.date));
       setUpVotes(videoData.likes);
       setDownVotes(videoData.dislikes);
+      setViews(videoData.views);
 
       const fetchOwnerData = async () => {
         try {
-          console.log("Fetching owner data...");
           const response = await fetch(`http://localhost:3000/api/users/${videoData.owner}`);
           if (!response.ok) {
             throw new Error('Failed to fetch owner data');
           }
           const data = await response.json();
-          console.log("Fetched owner data:", data);
           setOwnerData(data);
         } catch (error) {
           console.error('Error fetching owner data:', error);
         }
       };
-  
+
       fetchOwnerData();
-    } else {
-      console.log("Video data is not available yet");
     }
   }, [videoData]);
 
-  const handleLike = () => {
-    const newVoteStatus = voteStatus === 1 ? 0 : 1;
-    const newUpVotes = voteStatus === 1 ? upVotes - 1 : upVotes + 1;
-    const newDownVotes = voteStatus === -1 ? downVotes - 1 : downVotes;
-    setVoteStatus(newVoteStatus);
-    setUpVotes(newUpVotes);
-    setDownVotes(newDownVotes);
-    updateVideoData({ likes: newUpVotes, dislikes: newDownVotes });
+  const handleLike = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/videos/${videoData._id}/incrementLikes`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to increment likes');
+      }
+      const updatedVideo = await response.json();
+      setUpVotes(updatedVideo.likes);
+      setVoteStatus(voteStatus === 1 ? 0 : 1);
+      updateVideoData(updatedVideo);
+    } catch (error) {
+      console.error('Error incrementing likes:', error);
+    }
   };
 
-  const handleDislike = () => {
-    const newVoteStatus = voteStatus === -1 ? 0 : -1;
-    const newDownVotes = voteStatus === -1 ? downVotes - 1 : downVotes + 1;
-    const newUpVotes = voteStatus === 1 ? upVotes - 1 : upVotes;
-    setVoteStatus(newVoteStatus);
-    setUpVotes(newUpVotes);
-    setDownVotes(newDownVotes);
-    updateVideoData({ likes: newUpVotes, dislikes: newDownVotes });
+  const handleDislike = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/videos/${videoData._id}/incrementDislikes`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to increment dislikes');
+      }
+      const updatedVideo = await response.json();
+      setDownVotes(updatedVideo.dislikes);
+      setVoteStatus(voteStatus === -1 ? 0 : -1);
+      updateVideoData(updatedVideo);
+    } catch (error) {
+      console.error('Error incrementing dislikes:', error);
+    }
   };
-
-  console.log("Current state:", { videoData, ownerData });
 
   if (!videoData || !ownerData) {
     return <div>Loading video metadata...</div>;
@@ -126,7 +134,7 @@ const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
             color: isDarkMode ? "#ffffff" : "inherit",
           }}
         >
-          {videoData.views} views &nbsp;{formattedDate}
+          {views} views &nbsp;{formattedDate}
         </p>
         <p style={{ color: isDarkMode ? "#b3b3b3" : "inherit" }}>
           {videoData.description}

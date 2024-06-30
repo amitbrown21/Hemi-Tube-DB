@@ -66,6 +66,29 @@ function WatchPage({
         console.log("Fetched comments in WatchPage:", fetchedComments);
         setComments(fetchedComments);
 
+        // Increment views
+        const incrementViews = async () => {
+          try {
+            const response = await fetch(
+              `http://localhost:3000/api/videos/${currentVideo._id}/incrementViews`,
+              {
+                method: 'POST',
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error('Failed to increment views');
+            }
+
+            const incrementedVideo = await response.json();
+            setVideoData(incrementedVideo);
+          } catch (error) {
+            console.error('Error incrementing views:', error);
+          }
+        };
+
+        incrementViews();
+
       } catch (error) {
         console.error("Error fetching video data and comments:", error);
         setError(error.message);
