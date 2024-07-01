@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import "./UserChannel.css";
 
-function UserChannel({ setCurrentVideo, isDarkMode }) {
+function UserChannel({ setCurrentVideo, isDarkMode, currentUser }) {
   const navigate = useNavigate();
   const { userId } = useParams();
   const [userData, setUserData] = useState(null);
@@ -43,6 +43,11 @@ function UserChannel({ setCurrentVideo, isDarkMode }) {
   const handleVideoClick = (video) => {
     setCurrentVideo(video);
     navigate(`/watchpage/${video._id}`);
+  };
+
+  const handleEditClick = (video) => {
+    setCurrentVideo(video);
+    navigate(`/editvideo/${video._id}`);
   };
 
   const formatDate = (dateString) => {
@@ -92,9 +97,19 @@ function UserChannel({ setCurrentVideo, isDarkMode }) {
                 </Link>
               </div>
               <div className="video-info">
-                <h4 className={`video-title ${isDarkMode ? "dark-mode" : ""}`}>
-                  {video.title}
-                </h4>
+                <div className="title-edit-container">
+                  <h4
+                    className={`video-title ${isDarkMode ? "dark-mode" : ""}`}
+                  >
+                    {video.title}
+                  </h4>
+                  {currentUser && currentUser._id === video.owner && (
+                    <i
+                      className="bi bi-pencil-square edit-icon"
+                      onClick={() => handleEditClick(video)}
+                    ></i>
+                  )}
+                </div>
                 <p className={`video-stats ${isDarkMode ? "dark-mode" : ""}`}>
                   {video.views} views • {formatDate(video.date)}
                 </p>
