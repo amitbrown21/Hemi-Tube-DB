@@ -1,4 +1,5 @@
 const videosServices = require("../services/videosServices");
+const Video = require("../models/videoModel");
 
 const videosController = {
   getAllVideos: async (req, res) => {
@@ -123,6 +124,14 @@ const videosController = {
   getAllVideosWithTopAndRandom: async (req, res) => {
     try {
       const videos = await videosServices.getVideosWithTopAndRandom();
+      res.json(videos);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  getAllVideos: async (req, res) => {
+    try {
+      const videos = await Video.find().populate('owner', 'username');
       res.json(videos);
     } catch (error) {
       res.status(500).json({ message: error.message });
