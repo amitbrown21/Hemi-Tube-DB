@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import SideList from "./SideList";
 import VideoMetadata from "./video-metadata/VideoMetadata";
 import "./WatchPage.css";
@@ -6,29 +7,41 @@ import CommentSection from "./comments/CommentSection";
 
 function WatchPage({
   currentUser,
-  currentVideo,
   videos = [],
   setVideos,
   setCurrentVideo,
   isDarkMode,
 }) {
-  const [videoData, setVideoData] = useState(currentVideo);
+  const { videoID } = useParams(); // Extract videoID from URL
+  const [videoData, setVideoData] = useState(null);
   const [comments, setComments] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchVideoDataAndComments = async () => {
       try {
-        // Fetch video data
+        // First, fetch video data to get the owner ID
         const videoRes = await fetch(
-          `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`
+          `http://localhost:3000/api/videos/${videoID}`
         );
 
         if (!videoRes.ok) {
           throw new Error("Failed to fetch video data");
         }
 
-        const updatedVideo = await videoRes.json();
+        const video = await videoRes.json();
+        const videoOwnerID = video.owner;
+
+        // Fetch video data with the owner ID
+        const ownerVideoRes = await fetch(
+          `http://localhost:3000/api/users/${videoOwnerID}/videos/${videoID}`
+        );
+
+        if (!ownerVideoRes.ok) {
+          throw new Error("Failed to fetch video data from owner");
+        }
+
+        const updatedVideo = await ownerVideoRes.json();
         console.log("Fetched video data:", updatedVideo);
 
         // Fetch owner data
@@ -72,13 +85,13 @@ function WatchPage({
     };
 
     fetchVideoDataAndComments();
-  }, [currentVideo]);
+  }, [videoID]);
 
   useEffect(() => {
     const incrementViews = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/videos/${currentVideo._id}/incrementViews`,
+          `http://localhost:3000/api/videos/${videoID}/incrementViews`,
           {
             method: "POST",
           }
@@ -96,13 +109,13 @@ function WatchPage({
     };
 
     incrementViews();
-  }, [currentVideo]);
+  }, [videoID]);
 
   const updateVideoData = async (data) => {
     try {
       const token = sessionStorage.getItem("token");
       const res = await fetch(
-        `http://localhost:3000/api/users/${currentVideo.owner}/videos/${currentVideo._id}`,
+        `http://localhost:3000/api/users/${videoData.owner._id}/videos/${videoData._id}`,
         {
           method: "PUT",
           headers: {
@@ -120,7 +133,7 @@ function WatchPage({
       const updatedVideo = await res.json();
       setVideoData(updatedVideo);
       const updatedVideos = videos.map((video) =>
-        video._id === currentVideo._id ? updatedVideo : video
+        video._id === videoData._id ? updatedVideo : video
       );
       setVideos(updatedVideos);
     } catch (error) {

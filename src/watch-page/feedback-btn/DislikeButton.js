@@ -17,8 +17,8 @@ const DislikeButton = ({
       <img
         src={
           voteStatus === -1
-            ? "assets/icons/thumbs_down_filled.svg"
-            : "assets/icons/thumbs_down.svg"
+            ? "/assets/icons/thumbs_down_filled.svg"
+            : "/assets/icons/thumbs_down.svg"
         }
         alt="thumbs down"
         className="icon-img"

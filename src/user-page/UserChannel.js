@@ -41,9 +41,8 @@ function UserChannel({ setCurrentVideo, isDarkMode }) {
   }, [userId]);
 
   const handleVideoClick = (video) => {
-    console.log("Video clicked:", video); // Log the video object
-    //setCurrentVideo(video);
-    //navigate(`/watchpage/${video._id}`);
+    setCurrentVideo(video);
+    navigate(`/watchpage/${video._id}`);
   };
 
   const formatDate = (dateString) => {
@@ -80,7 +79,10 @@ function UserChannel({ setCurrentVideo, isDarkMode }) {
           {userVideos.map((video) => (
             <div key={video._id} className="video-card">
               <div className="video-thumbnail-container">
-                <Link to="/watchpage" onClick={() => handleVideoClick(video)}>
+                <Link
+                  to={`/watchpage/${video._id}`}
+                  onClick={() => handleVideoClick(video)}
+                >
                   <img
                     src={video.thumbnail}
                     alt={video.title}

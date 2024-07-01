@@ -13,7 +13,7 @@ const ShareButton = () => {
           data-bs-auto-close="true"
           aria-expanded="false"
         >
-          <img src="assets/icons/share.svg" alt="share" className="icon-img" />
+          <img src="/assets/icons/share.svg" alt="share" className="icon-img" />
           Share
         </button>
         <ul className="dropdown-menu">
@@ -39,7 +39,9 @@ const ShareButton = () => {
             <button
               className="dropdown-item"
               onClick={() => {
-                navigator.clipboard.writeText("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+                navigator.clipboard.writeText(
+                  "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                );
               }}
             >
               Copy link

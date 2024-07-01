@@ -1,34 +1,31 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../App.css";
 import "./CompactVideo.css";
 
 const CompactVideo = ({ src, setCurrentVideo }) => {
   const [ownerUsername, setOwnerUsername] = useState("Unknown");
   const [formattedDate, setFormattedDate] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (src.owner) {
-      const fetchOwnerData = async () => {
-        try {
-          console.log("Fetching owner data for owner ID:", src.owner); // Log the owner ID
-          const response = await fetch(
-            `http://localhost:3000/api/users/${src.owner}`
-          );
-          if (response.ok) {
-            const data = await response.json();
-            setOwnerUsername(data.username);
-          } else {
-            console.error("Failed to fetch owner data");
-          }
-        } catch (error) {
-          console.error("Error fetching owner data:", error);
+    const fetchOwnerData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/users/${src.owner}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setOwnerUsername(data.username);
+        } else {
+          console.error("Failed to fetch owner data");
         }
-      };
+      } catch (error) {
+        console.error("Error fetching owner data:", error);
+      }
+    };
 
-      fetchOwnerData();
-    } else {
-      console.warn("Owner ID is not available");
-    }
+    fetchOwnerData();
   }, [src.owner]);
 
   useEffect(() => {
@@ -45,6 +42,7 @@ const CompactVideo = ({ src, setCurrentVideo }) => {
 
   const handleClick = () => {
     setCurrentVideo(src);
+    navigate(`/watchpage/${src._id}`);
   };
 
   return (

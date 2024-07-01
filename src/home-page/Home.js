@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import "./Home.css";
 
 function HomePage({
@@ -14,11 +14,14 @@ function HomePage({
   isDarkMode,
 }) {
   const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
   const [topVideos, setTopVideos] = useState([]);
   const [otherVideos, setOtherVideos] = useState([]);
   const [allVideos, setAllVideos] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchInitialVideos = async () => {
@@ -54,7 +57,6 @@ function HomePage({
     fetchInitialVideos();
     fetchAllVideos();
 
-    // Token check and user verification
     const token = sessionStorage.getItem("token");
     if (token && !currentUser) {
       fetch("http://localhost:3000/api/users/verify-token", {
@@ -101,6 +103,7 @@ function HomePage({
 
   const handleVideoClick = (video) => {
     setCurrentVideo(video);
+    navigate(`/watchpage/${video._id}`);
   };
 
   const formatDate = (dateString) => {
@@ -123,27 +126,22 @@ function HomePage({
         {videoList.map((video) => (
           <div key={video._id} className="video-card">
             <div className="video-thumbnail-container">
-              <Link to="/watchpage" onClick={() => handleVideoClick(video)}>
+              <div onClick={() => handleVideoClick(video)}>
                 <img
                   src={video.thumbnail}
                   alt={video.title}
                   className="video-thumbnail"
                 />
                 <span className="video-duration">{video.duration}</span>
-              </Link>
+              </div>
             </div>
             <div className="video-info">
               <div className="title-edit-container">
-                <h4
-                  className={`video-title ${isDarkMode ? "dark-mode" : ""}`}
-                >
+                <h4 className={`video-title ${isDarkMode ? "dark-mode" : ""}`}>
                   {video.title}
                 </h4>
                 {currentUser && currentUser._id === video.owner._id && (
-                  <Link
-                    to="/editvideo"
-                    onClick={() => handleVideoClick(video)}
-                  >
+                  <Link to="/editvideo" onClick={() => handleVideoClick(video)}>
                     <i className="bi bi-pencil-square edit-icon"></i>
                   </Link>
                 )}
