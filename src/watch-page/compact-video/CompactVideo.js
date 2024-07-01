@@ -7,23 +7,28 @@ const CompactVideo = ({ src, setCurrentVideo }) => {
   const [formattedDate, setFormattedDate] = useState("");
 
   useEffect(() => {
-    const fetchOwnerData = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/users/${src.owner}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setOwnerUsername(data.username);
-        } else {
-          console.error("Failed to fetch owner data");
+    if (src.owner) {
+      const fetchOwnerData = async () => {
+        try {
+          console.log("Fetching owner data for owner ID:", src.owner); // Log the owner ID
+          const response = await fetch(
+            `http://localhost:3000/api/users/${src.owner}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setOwnerUsername(data.username);
+          } else {
+            console.error("Failed to fetch owner data");
+          }
+        } catch (error) {
+          console.error("Error fetching owner data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching owner data:", error);
-      }
-    };
+      };
 
-    fetchOwnerData();
+      fetchOwnerData();
+    } else {
+      console.warn("Owner ID is not available");
+    }
   }, [src.owner]);
 
   useEffect(() => {
@@ -55,7 +60,7 @@ const CompactVideo = ({ src, setCurrentVideo }) => {
         </div>
         <div>
           <span className="no-space" id="info">
-            {ownerUsername}
+            {src.owner.username}
           </span>
           <span className="no-space" id="info">
             {src.views} ⋅ {formattedDate}

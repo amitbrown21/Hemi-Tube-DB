@@ -1,5 +1,4 @@
 const videosServices = require("../services/videosServices");
-const Video = require("../models/videoModel");
 
 const videosController = {
   getAllVideos: async (req, res) => {
@@ -38,7 +37,7 @@ const videosController = {
         url,
         thumbnail,
         duration,
-        owner: userId
+        owner: userId,
       });
 
       res.status(201).json(newVideo);
@@ -60,7 +59,9 @@ const videosController = {
 
       // Check if the authenticated user is the owner of the video
       if (video.owner.toString() !== userId) {
-        return res.status(403).json({ message: "You are not authorized to edit this video" });
+        return res
+          .status(403)
+          .json({ message: "You are not authorized to edit this video" });
       }
 
       const updatedVideo = await videosServices.updateVideo(videoId, req.body);
@@ -82,7 +83,9 @@ const videosController = {
 
       // Check if the authenticated user is the owner of the video
       if (video.owner.toString() !== userId) {
-        return res.status(403).json({ message: "You are not authorized to delete this video" });
+        return res
+          .status(403)
+          .json({ message: "You are not authorized to delete this video" });
       }
 
       await videosServices.deleteVideo(videoId);
@@ -112,6 +115,17 @@ const videosController = {
     }
   },
 
+  decrementLikes: async (req, res) => {
+    // New method
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.decrementLikes(videoId);
+      res.json(updatedVideo);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
   incrementDislikes: async (req, res) => {
     try {
       const videoId = req.params.pid;
@@ -121,6 +135,18 @@ const videosController = {
       res.status(500).json({ message: error.message });
     }
   },
+
+  decrementDislikes: async (req, res) => {
+    // New method
+    try {
+      const videoId = req.params.pid;
+      const updatedVideo = await videosServices.decrementDislikes(videoId);
+      res.json(updatedVideo);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+
   getAllVideosWithTopAndRandom: async (req, res) => {
     try {
       const videos = await videosServices.getVideosWithTopAndRandom();
@@ -129,9 +155,10 @@ const videosController = {
       res.status(500).json({ message: error.message });
     }
   },
+
   getAllVideos: async (req, res) => {
     try {
-      const videos = await Video.find().populate('owner', 'username');
+      const videos = await Video.find().populate("owner", "username");
       res.json(videos);
     } catch (error) {
       res.status(500).json({ message: error.message });

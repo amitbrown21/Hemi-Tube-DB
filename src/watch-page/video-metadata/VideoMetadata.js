@@ -7,84 +7,115 @@ import "./VideoMetadata.css";
 import UserPic from "../../components/user-pic/UserPic";
 
 const VideoMetadata = ({ videoData, isDarkMode, updateVideoData }) => {
-  const [voteStatus, setVoteStatus] = useState(0);
-  const [upVotes, setUpVotes] = useState(0);
-  const [downVotes, setDownVotes] = useState(0);
-  const [views, setViews] = useState(0);
+  const [voteStatus, setVoteStatus] = useState(0); // 0: neutral, 1: liked, -1: disliked
+  const [upVotes, setUpVotes] = useState(videoData.likes);
+  const [downVotes, setDownVotes] = useState(videoData.dislikes);
+  const [views, setViews] = useState(videoData.views);
   const [formattedDate, setFormattedDate] = useState("");
   const [ownerData, setOwnerData] = useState(null);
 
   useEffect(() => {
-    if (videoData) {
-      const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
-        return `${day}.${month}.${year}`;
-      };
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}.${month}.${year}`;
+    };
 
-      setFormattedDate(formatDate(videoData.date));
-      setUpVotes(videoData.likes);
-      setDownVotes(videoData.dislikes);
-      setViews(videoData.views);
+    setFormattedDate(formatDate(videoData.date));
+    setUpVotes(videoData.likes);
+    setDownVotes(videoData.dislikes);
+    setViews(videoData.views);
 
-      const fetchOwnerData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:3000/api/users/${videoData.owner}`
-          );
-          if (!response.ok) {
-            throw new Error("Failed to fetch owner data");
-          }
-          const data = await response.json();
-          setOwnerData(data);
-        } catch (error) {
-          console.error("Error fetching owner data:", error);
+    const fetchOwnerData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/users/${videoData.owner}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch owner data");
         }
-      };
+        const data = await response.json();
+        setOwnerData(data);
+      } catch (error) {
+        console.error("Error fetching owner data:", error);
+      }
+    };
 
-      fetchOwnerData();
-    }
+    fetchOwnerData();
   }, [videoData]);
 
   const handleLike = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/videos/${videoData._id}/incrementLikes`,
-        {
-          method: "POST",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to increment likes");
-      }
-      const updatedVideo = await response.json();
-      setUpVotes(updatedVideo.likes);
-      setVoteStatus(voteStatus === 1 ? 0 : 1);
-      updateVideoData(updatedVideo);
-    } catch (error) {
-      console.error("Error incrementing likes:", error);
+    let newLikeStatus = 0;
+    if (voteStatus === 1) {
+      newLikeStatus = 0; // Removing like
+    } else {
+      newLikeStatus = 1; // Adding like
     }
+    await updateLikeDislikeStatus(newLikeStatus, voteStatus);
   };
 
   const handleDislike = async () => {
+    let newDislikeStatus = 0;
+    if (voteStatus === -1) {
+      newDislikeStatus = 0; // Removing dislike
+    } else {
+      newDislikeStatus = -1; // Adding dislike
+    }
+    await updateLikeDislikeStatus(newDislikeStatus, voteStatus);
+  };
+
+  const updateLikeDislikeStatus = async (newStatus, prevStatus) => {
+    let likeChange = 0;
+    let dislikeChange = 0;
+
+    if (newStatus === 1) {
+      likeChange = 1;
+      if (prevStatus === -1) dislikeChange = -1;
+    } else if (newStatus === -1) {
+      dislikeChange = 1;
+      if (prevStatus === 1) likeChange = -1;
+    } else if (newStatus === 0) {
+      if (prevStatus === 1) likeChange = -1;
+      else if (prevStatus === -1) dislikeChange = -1;
+    }
+
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/videos/${videoData._id}/incrementDislikes`,
-        {
-          method: "POST",
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to increment dislikes");
+      // Update the frontend state first
+      setUpVotes((prev) => prev + likeChange);
+      setDownVotes((prev) => prev + dislikeChange);
+      setVoteStatus(newStatus);
+
+      // Call the backend APIs to update likes/dislikes
+      if (likeChange !== 0) {
+        await fetch(
+          `http://localhost:3000/api/videos/${videoData._id}/${
+            likeChange > 0 ? "incrementLikes" : "decrementLikes"
+          }`,
+          { method: "POST" }
+        );
       }
-      const updatedVideo = await response.json();
-      setDownVotes(updatedVideo.dislikes);
-      setVoteStatus(voteStatus === -1 ? 0 : -1);
-      updateVideoData(updatedVideo);
+
+      if (dislikeChange !== 0) {
+        await fetch(
+          `http://localhost:3000/api/videos/${videoData._id}/${
+            dislikeChange > 0 ? "incrementDislikes" : "decrementDislikes"
+          }`,
+          { method: "POST" }
+        );
+      }
+
+      // Fetch the updated video data and update the parent state
+      const response = await fetch(
+        `http://localhost:3000/api/users/${videoData.owner}/videos/${videoData._id}`
+      );
+      if (response.ok) {
+        const updatedVideo = await response.json();
+        updateVideoData(updatedVideo);
+      }
     } catch (error) {
-      console.error("Error incrementing dislikes:", error);
+      console.error("Error updating likes/dislikes:", error);
     }
   };
 
