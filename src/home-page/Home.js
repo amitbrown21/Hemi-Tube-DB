@@ -140,11 +140,6 @@ function HomePage({
                 <h4 className={`video-title ${isDarkMode ? "dark-mode" : ""}`}>
                   {video.title}
                 </h4>
-                {currentUser && currentUser._id === video.owner._id && (
-                  <Link to="/editvideo" onClick={() => handleVideoClick(video)}>
-                    <i className="bi bi-pencil-square edit-icon"></i>
-                  </Link>
-                )}
               </div>
               <p className={`video-owner ${isDarkMode ? "dark-mode" : ""}`}>
                 {video.owner.username}

@@ -135,10 +135,15 @@
   align-items: center;
 }
 
-.upload-icon,
+.upload-icon {
+  height: 24px;
+  width: 24px;
+}
+
 .user-icon {
   height: 24px;
   width: 24px;
+  border-radius: 50%;
 }
 
 .upload-icon {
@@ -148,6 +153,7 @@
 
 .icon-button .test img {
   padding: 4px !important;
+  border-radius: 50%;
 }
 
 /* Media query for smaller screens */

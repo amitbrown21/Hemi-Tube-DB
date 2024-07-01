@@ -93,14 +93,10 @@ function App() {
             path="/watchpage/:videoID"
             element={<WatchPage {...props} isDarkMode={isDarkMode} />}
           />
+          <Route path="/channel/:userId" element={<UserChannel {...props} />} />
           <Route
-            path="/channel/:userId"
-            element={
-              <UserChannel
-                setCurrentVideo={setCurrentVideo}
-                isDarkMode={isDarkMode}
-              />
-            }
+            path="/editvideo/:videoId"
+            element={<EditVideo {...props} isDarkMode={isDarkMode} />}
           />
         </Route>
         <Route path="/login" element={<LogIn {...props} />} />
@@ -109,7 +105,6 @@ function App() {
           path="/signup"
           element={<SignUp {...props} isDarkMode={isDarkMode} />}
         />
-        <Route path="/editvideo" element={<EditVideo {...props} />} />
       </Routes>
     </BrowserRouter>
   );
