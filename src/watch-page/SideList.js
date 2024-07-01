@@ -6,13 +6,16 @@ const SideList = ({ videos = [], setCurrentVideo }) => {
   return (
     <div className="side-list-container">
       {videos.length > 0 ? (
-        videos.map((video, index) => (
-          <CompactVideo
-            key={index}
-            src={video}
-            setCurrentVideo={setCurrentVideo}
-          />
-        ))
+        videos.map((video, index) => {
+          //console.log("Video data:", video); // Log the video data
+          return (
+            <CompactVideo
+              key={index}
+              src={video}
+              setCurrentVideo={setCurrentVideo}
+            />
+          );
+        })
       ) : (
         <div>No videos available</div>
       )}

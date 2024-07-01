@@ -12,8 +12,8 @@ const LikeButton = ({ upVotes, voteStatus, handleLike, isDarkMode }) => {
       <img
         src={
           voteStatus === 1
-            ? "assets/icons/thumbs_up_filled.svg"
-            : "assets/icons/thumbs_up.svg"
+            ? "/assets/icons/thumbs_up_filled.svg"
+            : "/assets/icons/thumbs_up.svg"
         }
         alt="thumbs up"
         className="icon-img"
