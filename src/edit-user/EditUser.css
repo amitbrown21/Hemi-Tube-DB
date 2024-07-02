@@ -1,0 +1,32 @@
+/* EditUser.css */
+
+.edit-user-container.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.edit-user-card.dark-mode {
+  background-color: #1e1e1e;
+  border-color: #333333;
+}
+
+.edit-user-card-header.dark-mode {
+  background-color: #1e1e1e;
+  border-bottom-color: #333333;
+}
+
+.edit-user-card-body.dark-mode {
+  background-color: #1e1e1e;
+}
+
+.edit-user-card-footer.dark-mode {
+  background-color: #1e1e1e;
+}
+
+.edit-user-pass-req {
+  color: #ff0000;
+}
+
+.error.text-danger {
+  color: #ff0000;
+}

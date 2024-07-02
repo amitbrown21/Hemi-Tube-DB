@@ -2,12 +2,13 @@ const mongoose = require("mongoose");
 
 const User = require("../models/userModel"); // Adjust path as needed
 
-mongoose.connect("mongodb://localhost:27017/yourDatabase", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("Connected to MongoDB"))
-.catch((err) => console.error("Could not connect to MongoDB", err));
+mongoose
+  .connect("mongodb://localhost:27017/HemiTubeShonAndAmit", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Could not connect to MongoDB", err));
 
 function generateRandomUsers(count) {
   const users = [];
@@ -21,16 +22,32 @@ function generateRandomUsers(count) {
   ];
 
   const usernames = [
-    "TechWizard42", "NatureLover99", "FitnessFanatic23", "BookWorm2024", "MusicMaestro55",
-    "FoodieExplorer", "TravelBug88", "GamerPro365", "ArtisticSoul77", "ScienceGeek101",
-    "FilmBuff2023", "PetLover123", "FashionIcon22", "CodeNinja44", "YogaGuru33",
-    "HistoryBuff66", "EcoWarrior21", "CoffeeAddict95", "DIYMaster78", "SportsFan2024"
+    "TechWizard42",
+    "NatureLover99",
+    "FitnessFanatic23",
+    "BookWorm2024",
+    "MusicMaestro55",
+    "FoodieExplorer",
+    "TravelBug88",
+    "GamerPro365",
+    "ArtisticSoul77",
+    "ScienceGeek101",
+    "FilmBuff2023",
+    "PetLover123",
+    "FashionIcon22",
+    "CodeNinja44",
+    "YogaGuru33",
+    "HistoryBuff66",
+    "EcoWarrior21",
+    "CoffeeAddict95",
+    "DIYMaster78",
+    "SportsFan2024",
   ];
 
   function generatePassword() {
-    const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const numbers = '0123456789';
-    let password = '';
+    const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const numbers = "0123456789";
+    let password = "";
 
     // Ensure at least one letter and one number
     password += letters[Math.floor(Math.random() * letters.length)];
@@ -52,14 +69,15 @@ function generateRandomUsers(count) {
     const firstName = `FirstName${i + 1}`;
     const lastName = `LastName${i + 1}`;
     const username = usernames[i];
-    
+
     users.push({
       firstName,
       lastName,
       username,
       password: generatePassword(),
       gender: genders[Math.floor(Math.random() * genders.length)],
-      profilePicture: profilePictures[Math.floor(Math.random() * profilePictures.length)],
+      profilePicture:
+        profilePictures[Math.floor(Math.random() * profilePictures.length)],
       subscribers: `${Math.floor(Math.random() * 10000)}`,
       videosID: [],
     });

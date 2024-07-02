@@ -7,7 +7,7 @@ const videosRoutes = require("./routes/videosRoutes");
 const app = express();
 
 // JWT Secret
-process.env.JWT_SECRET = 'your_jwt_secret_here'; // In production, use a secure secret and store it in environment variables
+process.env.JWT_SECRET = "your_jwt_secret_here";
 
 // Increase the payload limit to handle large Base64 strings
 app.use(express.json({ limit: "50mb" }));
@@ -19,7 +19,7 @@ app.use(express.json());
 
 // Database connection
 mongoose
-  .connect("mongodb://localhost:27017/yourDatabase", {
+  .connect("mongodb://localhost:27017/HemiTubeShonAndAmit", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

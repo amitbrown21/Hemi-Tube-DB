@@ -40,6 +40,9 @@ const usersController = {
       const newUser = await usersServices.createUser(req.body);
       res.status(201).json(newUser);
     } catch (error) {
+      if (error.message === "Username is already taken") {
+        return res.status(400).json({ message: "Username is already taken" });
+      }
       res.status(400).json({ message: error.message });
     }
   },
@@ -83,15 +86,18 @@ const usersController = {
   login: async (req, res) => {
     try {
       const { username, password } = req.body;
-      console.log('Login attempt for username:', username);
-      
-      const { token, userId } = await tokensServices.createToken(username, password);
-      
-      console.log('Login successful for user:', userId);
+      console.log("Login attempt for username:", username);
+
+      const { token, userId } = await tokensServices.createToken(
+        username,
+        password
+      );
+
+      console.log("Login successful for user:", userId);
       res.json({ token, userId });
     } catch (error) {
-      console.error('Login error:', error.message);
-      console.error('Stack trace:', error.stack);
+      console.error("Login error:", error.message);
+      console.error("Stack trace:", error.stack);
       res.status(401).json({ message: "Invalid username or password" });
     }
   },
