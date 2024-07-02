@@ -3,6 +3,10 @@ const Video = require("../models/videoModel");
 
 const createUser = async (userData) => {
   try {
+    const existingUser = await User.findOne({ username: userData.username });
+    if (existingUser) {
+      throw new Error("Username is already taken");
+    }
     const user = new User(userData);
     await user.save();
     return user;

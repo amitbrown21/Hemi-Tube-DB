@@ -11,8 +11,6 @@ const Comment = ({
   isDarkMode,
   currentUser,
 }) => {
-  const defaultProfilePicture = "assets/icons/notLoggedIn.svg";
-  const profilePicture = comment?.profilePicture || defaultProfilePicture;
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
   const navigate = useNavigate();
@@ -33,10 +31,7 @@ const Comment = ({
 
   const handleNavigateToUser = () => {
     if (comment.userId) {
-      console.log("Navigating to user with ID:", comment.userId);
       navigate(`/channel/${comment.userId}`);
-    } else {
-      console.error("Comment owner ID not set");
     }
   };
 
@@ -50,7 +45,7 @@ const Comment = ({
 
   return (
     <div className={`comment-container ${isDarkMode ? "dark-mode" : ""}`}>
-      <UserPic src={profilePicture} size={35} />
+      <UserPic src={comment.profilePicture} size={35} />
       <div>
         <span
           className={`commenter-name ${isDarkMode ? "dark-mode" : ""}`}

@@ -27,7 +27,11 @@ function Header({ currentUser, setCurrentUser, isDarkMode, toggleDarkMode }) {
       <div className="left-section">
         <Link to="/" className="logo-link" onClick={handleLogoClick}>
           <img
-            src={isDarkMode ? "assets/img/youtube_logo_dark.png" : "assets/img/youtube_logo.png"}
+            src={
+              isDarkMode
+                ? "/assets/img/youtube_logo_dark.png"
+                : "/assets/img/youtube_logo.png"
+            }
             alt="YouTube Logo"
             className="logo"
           />
@@ -43,7 +47,11 @@ function Header({ currentUser, setCurrentUser, isDarkMode, toggleDarkMode }) {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button className="search-button" onClick={handleSearch}>
-            <img src="/assets/icons/search-icon.svg" alt="Search" className="search-icon" />
+            <img
+              src="/assets/icons/search-icon.svg"
+              alt="Search"
+              className="search-icon"
+            />
           </button>
         </div>
       </div>
@@ -52,18 +60,26 @@ function Header({ currentUser, setCurrentUser, isDarkMode, toggleDarkMode }) {
           <>
             <Link to="/uploadvideo" className="icon-button-link">
               <button className="icon-button">
-                <img src={"assets/icons/upload-video-icon.svg"} alt="Upload Video" className="upload-icon" />
+                <img
+                  src={"/assets/icons/upload-video-icon.svg"}
+                  alt="Upload Video"
+                  className="upload-icon"
+                />
               </button>
             </Link>
             <button className="icon-button" onClick={toggleDarkMode}>
               <img
-                src="assets/icons/darkmode-icon.svg"
+                src="/assets/icons/darkmode-icon.svg"
                 alt="Switch between dark and light mode"
                 className="mode-icon"
               />
             </button>
             <div className="user-menu-container">
-              <UserMenu currentUser={currentUser} onLogout={handleLogout} isDarkMode={isDarkMode} />
+              <UserMenu
+                currentUser={currentUser}
+                onLogout={handleLogout}
+                isDarkMode={isDarkMode}
+              />
             </div>
           </>
         ) : (

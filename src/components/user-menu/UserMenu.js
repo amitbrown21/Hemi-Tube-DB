@@ -15,6 +15,11 @@ function UserMenu({ currentUser, onLogout }) {
     setIsOpen(false);
   };
 
+  const handleEditUser = () => {
+    navigate(`/edituser/${currentUser._id}`);
+    setIsOpen(false);
+  };
+
   return (
     <div className="user-menu">
       <button className="icon-button" onClick={toggleMenu}>
@@ -28,6 +33,9 @@ function UserMenu({ currentUser, onLogout }) {
         <div className="user-dropdown-menu">
           <button onClick={handleMyChannel} className="dropdown-item">
             My Channel
+          </button>
+          <button onClick={handleEditUser} className="dropdown-item">
+            Edit User
           </button>
           <button onClick={onLogout} className="dropdown-item">
             Logout

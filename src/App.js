@@ -10,6 +10,7 @@ import Home from "./home-page/Home";
 import Layout from "./components/Layout/Layout";
 import EditVideo from "./edit-video/EditVideo";
 import UserChannel from "./user-page/UserChannel";
+import EditUser from "./edit-user/EditUser";
 
 function App() {
   const [users, setUsers] = useState(usersDB);
@@ -97,6 +98,16 @@ function App() {
           <Route
             path="/editvideo/:videoId"
             element={<EditVideo {...props} isDarkMode={isDarkMode} />}
+          />
+          <Route
+            path="/edituser/:userId"
+            element={
+              <EditUser
+                {...props}
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            }
           />
         </Route>
         <Route path="/login" element={<LogIn {...props} />} />

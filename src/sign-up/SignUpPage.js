@@ -75,6 +75,10 @@ function SignUpPage() {
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Failed to create user:", errorText);
+        const errorJson = JSON.parse(errorText);
+        if (errorJson.message === "Username is already taken") {
+          throw new Error("Username is already taken");
+        }
         throw new Error(errorText || "Failed to create user");
       }
 
@@ -83,7 +87,7 @@ function SignUpPage() {
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error creating user:", error);
-      setError("Failed to create user");
+      setError(error.message);
     }
   };
 
