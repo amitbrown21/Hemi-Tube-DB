@@ -3,6 +3,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const usersRoutes = require("./routes/usersRoutes");
 const videosRoutes = require("./routes/videosRoutes");
+const multer = require("multer");
+const path = require("path");
 
 const app = express();
 
@@ -17,6 +19,39 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
 app.use(express.json());
 
+// Set storage engine for multer
+const storage = multer.diskStorage({
+  destination: "./uploads/",
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+// Init upload
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }, // Limit the file size to 1MB
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+});
+
+// Check file type
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb("Error: Images Only!");
+  }
+}
+
 // Database connection
 mongoose
   .connect("mongodb://localhost:27017/HemiTubeShonAndAmit", {
@@ -30,11 +65,26 @@ mongoose
 app.use("/api/users", usersRoutes);
 app.use("/api/videos", videosRoutes);
 
+// Upload endpoint
+app.post("/upload", upload.single("thumbnail"), (req, res) => {
+  if (req.file == undefined) {
+    res.status(400).json({ msg: "Error: No File Selected!" });
+  } else {
+    res.json({
+      msg: "File Uploaded!",
+      filePath: `/uploads/${req.file.filename}`,
+    });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
+
+// Serve static files
+app.use("/uploads", express.static("uploads"));
 
 // Start server
 const PORT = process.env.PORT || 3000;

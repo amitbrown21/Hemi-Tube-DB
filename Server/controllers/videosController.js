@@ -24,11 +24,20 @@ const videosController = {
 
   createVideo: async (req, res) => {
     try {
-      const userId = req.params.id;
-      const { title, description, url, thumbnail, duration } = req.body;
+      console.log("Request received to create video with body:", req.body);
+      console.log("Files received:", req.files);
 
-      if (!userId) {
-        return res.status(400).json({ message: "User ID is required" });
+      const userId = req.body.userId;
+      const title = req.body.title;
+      const description = req.body.description;
+      const url = req.files.video ? req.files.video[0].path : null;
+      const thumbnail = req.files.thumbnail
+        ? req.files.thumbnail[0].path
+        : null;
+
+      if (!userId || !title || !description || !url || !thumbnail) {
+        console.log("Missing fields in request");
+        return res.status(400).json({ message: "Missing required fields" });
       }
 
       const newVideo = await videosServices.createVideo(userId, {
@@ -36,7 +45,7 @@ const videosController = {
         description,
         url,
         thumbnail,
-        duration,
+        duration: "00:00",
         owner: userId,
       });
 
@@ -116,7 +125,6 @@ const videosController = {
   },
 
   decrementLikes: async (req, res) => {
-    // New method
     try {
       const videoId = req.params.pid;
       const updatedVideo = await videosServices.decrementLikes(videoId);
@@ -137,7 +145,6 @@ const videosController = {
   },
 
   decrementDislikes: async (req, res) => {
-    // New method
     try {
       const videoId = req.params.pid;
       const updatedVideo = await videosServices.decrementDislikes(videoId);

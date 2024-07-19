@@ -50,7 +50,6 @@ const incrementLikes = async (id) => {
 };
 
 const decrementLikes = async (id) => {
-  // New method
   return await Video.findByIdAndUpdate(
     id,
     { $inc: { likes: -1 } },
@@ -67,7 +66,6 @@ const incrementDislikes = async (id) => {
 };
 
 const decrementDislikes = async (id) => {
-  // New method
   return await Video.findByIdAndUpdate(
     id,
     { $inc: { dislikes: -1 } },
