@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 // Init upload
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1000000 }, // Limit the file size to 1MB
+  limits: { fileSize: 50000000 }, // Limit the file size to 50MB
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
@@ -64,24 +64,6 @@ mongoose
 // Routes
 app.use("/api/users", usersRoutes);
 app.use("/api/videos", videosRoutes);
-
-// Upload endpoint
-app.post("/upload", upload.single("thumbnail"), (req, res) => {
-  if (req.file == undefined) {
-    res.status(400).json({ msg: "Error: No File Selected!" });
-  } else {
-    res.json({
-      msg: "File Uploaded!",
-      filePath: `/uploads/${req.file.filename}`,
-    });
-  }
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-});
 
 // Serve static files
 app.use("/uploads", express.static("uploads"));

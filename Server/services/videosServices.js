@@ -1,14 +1,19 @@
 const Video = require("../models/videoModel");
 const User = require("../models/userModel");
+const mongoose = require("mongoose");
 
 const createVideo = async (userId, videoData) => {
-  const video = new Video({
-    ...videoData,
-    owner: userId,
-  });
-  await video.save();
-  await User.findByIdAndUpdate(userId, { $push: { videosID: video._id } });
-  return video;
+  try {
+    const video = new Video({
+      ...videoData,
+      owner: new mongoose.Types.ObjectId(userId), // Ensure userId is cast to ObjectId with 'new'
+    });
+    await video.save();
+    await User.findByIdAndUpdate(userId, { $push: { videosID: video._id } });
+    return video;
+  } catch (error) {
+    throw new Error(`Error creating video: ${error.message}`);
+  }
 };
 
 const getVideos = async () => {

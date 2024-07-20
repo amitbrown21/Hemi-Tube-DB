@@ -1,5 +1,6 @@
 const usersServices = require("../services/usersServices");
 const tokensServices = require("../services/tokensServices");
+const path = require("path");
 
 const usersController = {
   getAllUsers: async (req, res) => {
@@ -37,7 +38,16 @@ const usersController = {
 
   createUser: async (req, res) => {
     try {
-      const newUser = await usersServices.createUser(req.body);
+      const userData = req.body;
+      let profileImagePath = "uploads/profile_default.png"; // Default profile image
+
+      if (req.file) {
+        profileImagePath = path.normalize(req.file.path).replace(/\\/g, "/"); // Normalize and replace backslashes
+      }
+
+      userData.profilePicture = profileImagePath;
+
+      const newUser = await usersServices.createUser(userData);
       res.status(201).json(newUser);
     } catch (error) {
       if (error.message === "Username is already taken") {

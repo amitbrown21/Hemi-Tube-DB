@@ -41,7 +41,7 @@ function checkFileType(file, cb) {
 }
 
 // Public routes
-router.post("/", usersController.createUser);
+router.post("/", upload.single("profileImage"), usersController.createUser);
 router.post("/login", usersController.login);
 router.get("/:id", usersController.getUserById); // Made public
 router.get("/:id/videos", usersController.getUserVideos); // Made public

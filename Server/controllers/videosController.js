@@ -1,9 +1,14 @@
 const videosServices = require("../services/videosServices");
+const Video = require("../models/videoModel");
+const path = require("path");
 
 const videosController = {
   getAllVideos: async (req, res) => {
     try {
-      const videos = await videosServices.getVideos();
+      const videos = await Video.find().populate(
+        "owner",
+        "username profilePicture"
+      );
       res.json(videos);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -12,7 +17,10 @@ const videosController = {
 
   getVideoById: async (req, res) => {
     try {
-      const video = await videosServices.getVideoById(req.params.pid);
+      const video = await Video.findById(req.params.id).populate(
+        "owner",
+        "username profilePicture"
+      );
       if (!video) {
         return res.status(404).json({ message: "Video not found" });
       }
@@ -27,12 +35,14 @@ const videosController = {
       console.log("Request received to create video with body:", req.body);
       console.log("Files received:", req.files);
 
-      const userId = req.body.userId;
+      const userId = req.body.userId; // This should now be a simple string
       const title = req.body.title;
       const description = req.body.description;
-      const url = req.files.video ? req.files.video[0].path : null;
+      const url = req.files.video
+        ? path.normalize(req.files.video[0].path).replace(/\\/g, "/")
+        : null;
       const thumbnail = req.files.thumbnail
-        ? req.files.thumbnail[0].path
+        ? path.normalize(req.files.thumbnail[0].path).replace(/\\/g, "/")
         : null;
 
       if (!userId || !title || !description || !url || !thumbnail) {
@@ -46,7 +56,6 @@ const videosController = {
         url,
         thumbnail,
         duration: "00:00",
-        owner: userId,
       });
 
       res.status(201).json(newVideo);
@@ -168,6 +177,7 @@ const videosController = {
       const videos = await Video.find().populate("owner", "username");
       res.json(videos);
     } catch (error) {
+      console.error("Error fetching all videos:", error); // Log error details
       res.status(500).json({ message: error.message });
     }
   },

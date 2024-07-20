@@ -42,7 +42,7 @@ DELETE {{baseUrl}}/users/667463e9fa759519f4019616
 ### Videos
 
 # Get all videos
-GET {{baseUrl}}/videos
+GET {{baseUrl}}/videos/all
 
 ### Create a new video for a specific user
 POST {{baseUrl}}/users/667463e9fa759519f4019616/videos
