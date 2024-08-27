@@ -1,4 +1,5 @@
 # About
+
 This project is a YouTube clone developed by a team of two, Shon and Amit. It consists of a [website](https://github.com/amitbrown21/Hemi-Tube-DB) and an [Android app](https://github.com/amitbrown21/Hemi-Tube-Android-DB) that aim to replicate the core functionalities of YouTube.
 
 ## Building process
@@ -15,6 +16,7 @@ Our team started the development process by focusing on the website. We divided 
 - Channel page for a user with his videos.
 
 ## Technologies Used
+
 ### Website
 
 - Front-end:
@@ -25,8 +27,9 @@ Our team started the development process by focusing on the website. We divided 
   - React
 
 - Back-end:
+  - NodeJS
+  - Express
   - MongoDB
-  - Javascript
 
 ### Android App
 
@@ -34,11 +37,12 @@ Our team started the development process by focusing on the website. We divided 
 - Android SDK
 
 ## Setup and Installation
+
 ### Website
 
 - Clone the repository: git clone https://github.com/amitbrown21/Hemi-Tube-DB
 - Install dependencies for both the main react app and the 'Server' folder: npm install express mongoose jsonwebtoken
-- Run the scripts in the 'Scripts' folder: first   'node .\uploadUsers.js' then 'node .\uploadVideos.js'.
+- Run the scripts in the 'Scripts' folder(Inside the Server folder): first 'node .\uploadUsers.js' then 'node .\uploadVideos.js'.
 - Start the server: node /Server/app.js
 - Start the development server: npm start, then click 'Y'.
 - Open the website in your browser at http://localhost:3001
@@ -53,6 +57,6 @@ Our team started the development process by focusing on the website. We divided 
 ---
 
 ### Contributors
- 
+
 [Shon Trubin](https://github.com/ShonTrubin)  
-[Amit Brounstine](https://github.com/amitbrown21)  
+[Amit Brounstine](https://github.com/amitbrown21)
