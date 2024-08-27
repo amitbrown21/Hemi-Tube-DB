@@ -13,17 +13,18 @@ const commentController = {
   },
   createComment: async (req, res) => {
     try {
-      const videoId = req.params.pid;
       const { body, username, profilePicture, userId } = req.body;
+      const videoId = req.params.pid;
 
       console.log("Creating comment for video:", videoId);
       console.log("Comment data:", { body, username, profilePicture, userId });
 
-      const newComment = await commentServices.createComment(videoId, {
+      const newComment = await commentServices.createComment({
         body,
         username,
         profilePicture,
         userId,
+        videoId,
       });
 
       console.log("New comment created:", newComment);

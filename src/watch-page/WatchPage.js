@@ -20,63 +20,70 @@ function WatchPage({
   useEffect(() => {
     const fetchVideoDataAndComments = async () => {
       try {
-        // First, fetch video data to get the owner ID
+        console.log(`Fetching video data for videoID: ${videoID}`);
         const videoRes = await fetch(
           `http://localhost:3000/api/videos/${videoID}`
         );
 
         if (!videoRes.ok) {
+          const errorText = await videoRes.text();
+          console.error("Failed to fetch video data:", errorText);
           throw new Error("Failed to fetch video data");
         }
 
         const video = await videoRes.json();
         const videoOwnerID = video.owner;
+        console.log(`Fetched video data:`, video);
 
-        // Fetch video data with the owner ID
+        console.log(`Fetching video data from owner with ID: ${videoOwnerID}`);
         const ownerVideoRes = await fetch(
           `http://localhost:3000/api/users/${videoOwnerID}/videos/${videoID}`
         );
 
         if (!ownerVideoRes.ok) {
+          const errorText = await ownerVideoRes.text();
+          console.error("Failed to fetch video data from owner:", errorText);
           throw new Error("Failed to fetch video data from owner");
         }
 
         const updatedVideo = await ownerVideoRes.json();
-        console.log("Fetched video data:", updatedVideo);
+        console.log("Fetched updated video data:", updatedVideo);
 
-        // Fetch owner data
+        console.log(`Fetching owner data for ownerID: ${videoOwnerID}`);
         const ownerRes = await fetch(
-          `http://localhost:3000/api/users/${updatedVideo.owner}`
+          `http://localhost:3000/api/users/${videoOwnerID}`
         );
 
         if (!ownerRes.ok) {
+          const errorText = await ownerRes.text();
+          console.error("Failed to fetch owner data:", errorText);
           throw new Error("Failed to fetch owner data");
         }
 
         const ownerData = await ownerRes.json();
         console.log("Fetched owner data:", ownerData);
 
-        // Combine video and owner data
         const videoWithOwnerData = {
           ...updatedVideo,
           owner: ownerData,
         };
 
         setVideoData(videoWithOwnerData);
+        console.log("Set video data with owner info:", videoWithOwnerData);
 
-        // Fetch comments
+        console.log(`Fetching comments for videoID: ${videoID}`);
         const commentsRes = await fetch(
-          `http://localhost:3000/api/users/${updatedVideo.owner}/videos/${updatedVideo._id}/comments`
+          `http://localhost:3000/api/users/${videoOwnerID}/videos/${videoID}/comments`
         );
 
         if (!commentsRes.ok) {
           const errorText = await commentsRes.text();
-          console.error("Comments fetch error:", errorText);
+          console.error("Failed to fetch comments:", errorText);
           throw new Error(`Failed to fetch comments: ${errorText}`);
         }
 
         const fetchedComments = await commentsRes.json();
-        console.log("Fetched comments in WatchPage:", fetchedComments);
+        console.log("Fetched comments:", fetchedComments);
         setComments(fetchedComments);
       } catch (error) {
         console.error("Error fetching video data and comments:", error);
@@ -90,6 +97,7 @@ function WatchPage({
   useEffect(() => {
     const incrementViews = async () => {
       try {
+        console.log(`Incrementing views for videoID: ${videoID}`);
         const response = await fetch(
           `http://localhost:3000/api/videos/${videoID}/incrementViews`,
           {
@@ -98,10 +106,13 @@ function WatchPage({
         );
 
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Failed to increment views:", errorText);
           throw new Error("Failed to increment views");
         }
 
         const incrementedVideo = await response.json();
+        console.log("Incremented views, updated video data:", incrementedVideo);
         setVideoData(incrementedVideo);
       } catch (error) {
         console.error("Error incrementing views:", error);
@@ -114,6 +125,7 @@ function WatchPage({
   const updateVideoData = async (data) => {
     try {
       const token = sessionStorage.getItem("token");
+      console.log("Updating video data with:", data);
       const res = await fetch(
         `http://localhost:3000/api/users/${videoData.owner._id}/videos/${videoData._id}`,
         {
@@ -127,10 +139,13 @@ function WatchPage({
       );
 
       if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Failed to update video data:", errorText);
         throw new Error("Failed to update video data");
       }
 
       const updatedVideo = await res.json();
+      console.log("Updated video data:", updatedVideo);
       setVideoData(updatedVideo);
       const updatedVideos = videos.map((video) =>
         video._id === videoData._id ? updatedVideo : video
@@ -158,7 +173,7 @@ function WatchPage({
         >
           <div className="video-player-wrapper">
             <video key={videoData.url} controls={true} className="video-player">
-              <source src={videoData.url} type="video/mp4"></source>
+              <source src={`http://localhost:3000/${videoData.url}`} type="video/mp4"></source>
               Your browser does not support the video tag.
             </video>
           </div>

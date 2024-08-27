@@ -128,7 +128,7 @@ function HomePage({
             <div className="video-thumbnail-container">
               <div onClick={() => handleVideoClick(video)}>
                 <img
-                  src={video.thumbnail}
+                  src={`http://localhost:3000/${video.thumbnail}`}
                   alt={video.title}
                   className="video-thumbnail"
                 />
@@ -153,6 +153,7 @@ function HomePage({
       </div>
     </div>
   );
+  
 
   const filteredVideos = allVideos.filter((video) =>
     video.title.toLowerCase().includes(searchQuery.toLowerCase())

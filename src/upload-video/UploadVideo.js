@@ -53,6 +53,7 @@ function UploadVideo({ videos, setVideos, currentUser }) {
     }
 
     const formData = new FormData();
+    formData.append("userId", currentUser._id);  // Make sure userId is added
     formData.append("title", title);
     formData.append("description", description);
     formData.append("video", videoFile);
