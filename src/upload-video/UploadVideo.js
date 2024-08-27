@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import TextareaField from "../components/TextareaField";
 import FileInputField from "../components/FileinputField";
@@ -30,7 +30,7 @@ function UploadVideo({ videos, setVideos, currentUser }) {
   useEffect(() => {
     if (videoFile) {
       const videoElement = document.createElement("video");
-      videoElement.src = videoFile;
+      videoElement.src = URL.createObjectURL(videoFile);
       videoElement.onloadedmetadata = () => {
         setDuration(videoElement.duration);
       };
@@ -40,30 +40,25 @@ function UploadVideo({ videos, setVideos, currentUser }) {
   const handleFileChange = (e, setFile) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFile(reader.result); // Base64 string
-      };
-      reader.readAsDataURL(file);
+      setFile(file);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!videoFile || !thumbnailFile) {
       alert("Video and thumbnail files are required.");
       return;
     }
-  
-    const newVideo = {
-      title,
-      description,
-      url: videoFile,
-      thumbnail: thumbnailFile,
-      duration: duration ? formatDuration(duration) : "00:00",
-    };
-  
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("video", videoFile);
+    formData.append("thumbnail", thumbnailFile);
+    formData.append("duration", duration ? formatDuration(duration) : "00:00");
+
     try {
       const token = sessionStorage.getItem('token');
       const res = await fetch(
@@ -71,29 +66,29 @@ function UploadVideo({ videos, setVideos, currentUser }) {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
           },
-          body: JSON.stringify(newVideo),
+          body: formData,
         }
       );
-  
+
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Failed to upload video:", errorText);
         throw new Error(errorText || "Failed to upload video");
       }
-  
+
       const result = await res.json();
       console.log("Video uploaded successfully:", result);
       setVideos([...videos, result]);
-      
+
       // Redirect to homepage after successful upload
       navigate('/');
     } catch (error) {
       console.error("Error uploading video:", error);
     }
   };
+
   return (
     <div className="container mt-3">
       <div className="container">

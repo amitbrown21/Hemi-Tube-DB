@@ -3,6 +3,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const usersRoutes = require("./routes/usersRoutes");
 const videosRoutes = require("./routes/videosRoutes");
+const multer = require("multer");
+const path = require("path");
+
 
 const app = express();
 
@@ -10,12 +13,45 @@ const app = express();
 process.env.JWT_SECRET = "your_jwt_secret_here";
 
 // Increase the payload limit to handle large Base64 strings
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Set storage engine for multer
+const storage = multer.diskStorage({
+  destination: "./uploads/",
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+// Init upload
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 50000000 }, // Limit the file size to 50MB
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+});
+
+// Check file type
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb("Error: Images Only!");
+  }
+}
 
 // Database connection
 mongoose

@@ -1,4 +1,8 @@
 const videosServices = require("../services/videosServices");
+const path = require('path');
+const { notifyCppServer } = require('../cppClient'); // Adjust path as needed
+
+
 
 const videosController = {
   getAllVideos: async (req, res) => {
@@ -25,10 +29,17 @@ const videosController = {
   createVideo: async (req, res) => {
     try {
       const userId = req.params.id;
-      const { title, description, url, thumbnail, duration } = req.body;
+      const { title, description } = req.body;
 
-      if (!userId) {
-        return res.status(400).json({ message: "User ID is required" });
+      const url = req.files.video
+        ? path.normalize(req.files.video[0].path).replace(/\\/g, "/")
+        : null;
+      const thumbnail = req.files.thumbnail
+        ? path.normalize(req.files.thumbnail[0].path).replace(/\\/g, "/")
+        : null;
+
+      if (!userId || !title || !description || !url || !thumbnail) {
+        return res.status(400).json({ message: "Missing required fields" });
       }
 
       const newVideo = await videosServices.createVideo(userId, {
@@ -36,7 +47,7 @@ const videosController = {
         description,
         url,
         thumbnail,
-        duration,
+        duration: "00:00",
         owner: userId,
       });
 
@@ -99,6 +110,8 @@ const videosController = {
     try {
       const videoId = req.params.pid;
       const updatedVideo = await videosServices.incrementViews(videoId);
+      // Notify the C++ server about the video view
+      notifyCppServer(`User test watched video ${videoId}`);
       res.json(updatedVideo);
     } catch (error) {
       res.status(500).json({ message: error.message });
