@@ -94,6 +94,12 @@ function WatchPage({
           `http://localhost:3000/api/videos/${videoID}/incrementViews`,
           {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: currentUser ? currentUser._id : null,
+            }),
           }
         );
 
@@ -109,8 +115,7 @@ function WatchPage({
     };
 
     incrementViews();
-  }, [videoID]);
-
+  }, [videoID, currentUser]);
   const updateVideoData = async (data) => {
     try {
       const token = sessionStorage.getItem("token");
