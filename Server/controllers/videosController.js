@@ -1,29 +1,32 @@
 const videosServices = require("../services/videosServices");
 const net = require("net");
 
-const CPP_SERVER_PORT = 5557;
-const CPP_SERVER_HOST = "localhost";
+function sendToCppServer(userId, videoId, command, callback) {
+  const client = new net.Socket();
+  const message = `${command} ${userId} ${videoId}`;
 
-const sendToCppServer = (message) => {
-  return new Promise((resolve, reject) => {
-    const client = new net.Socket();
-    client.connect(CPP_SERVER_PORT, CPP_SERVER_HOST, () => {
-      console.log("Connected to C++ server");
-      client.write(message);
-    });
-
-    client.on("data", (data) => {
-      console.log("Received from C++ server:", data.toString());
-      client.destroy();
-      resolve(data.toString());
-    });
-
-    client.on("error", (err) => {
-      console.error("Error connecting to C++ server:", err);
-      reject(err);
-    });
+  client.connect(5557, "127.0.0.1", () => {
+    console.log("Sending to C++ server:", message);
+    client.write(message);
   });
-};
+
+  client.on("data", (data) => {
+    console.log("Received from C++ server:", data.toString());
+    if (callback) {
+      callback(data.toString()); // Pass the response to the callback
+    }
+    client.destroy(); // Close the connection after receiving a response
+  });
+
+  client.on("error", (err) => {
+    console.error("Error communicating with C++ server:", err);
+  });
+
+  client.on("close", () => {
+    console.log("Connection to C++ server closed");
+  });
+}
+
 
 const videosController = {
   getAllVideos: async (req, res) => {
@@ -123,14 +126,24 @@ const videosController = {
   incrementViews: async (req, res) => {
     try {
       const videoId = req.params.pid;
-      const userId = req.body.userId || "Guest"; // Use the userId from the request or 'Guest'
+      const userId = req.body.userId || "Guest";
 
       const updatedVideo = await videosServices.incrementViews(videoId);
 
-      // Send message to C++ server
-      const message = `User ${userId} watched Video ${videoId}`;
-      const response = await sendToCppServer(message);
-      console.log("C++ server response:", response);
+      // Send a message to the C++ server
+      //sendToCppServer(userId, videoId, "WATCH");
+
+      sendToCppServer(userId, videoId, "WATCH", (response) => {
+        console.log("Response from C++ server after WATCH command:", response);
+      });
+
+      sendToCppServer(userId, videoId, "RECOMMEND", (response) => {
+        console.log(
+          "Response from C++ server after RECOMMEND command:",
+          response
+        );
+      });
+
 
       res.json(updatedVideo);
     } catch (error) {

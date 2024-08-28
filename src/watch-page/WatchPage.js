@@ -97,10 +97,9 @@ function WatchPage({
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Optional, if user is logged in
             },
             body: JSON.stringify({
-              userId: currentUser ? currentUser._id : "Guest", // Send the currentUser ID or 'Guest'
+              userId: currentUser ? currentUser._id : null,
             }),
           }
         );
