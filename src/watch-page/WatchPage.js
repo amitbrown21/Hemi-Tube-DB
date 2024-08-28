@@ -90,6 +90,7 @@ function WatchPage({
   useEffect(() => {
     const incrementViews = async () => {
       try {
+        // Construct the request body or query string based on your server's needs
         const response = await fetch(
           `http://localhost:3000/api/videos/${videoID}/incrementViews`,
           {
@@ -116,6 +117,7 @@ function WatchPage({
 
     incrementViews();
   }, [videoID, currentUser]);
+
   const updateVideoData = async (data) => {
     try {
       const token = sessionStorage.getItem("token");

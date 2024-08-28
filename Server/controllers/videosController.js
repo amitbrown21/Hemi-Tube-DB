@@ -27,6 +27,7 @@ function sendToCppServer(userId, videoId, command, callback) {
   });
 }
 
+
 const videosController = {
   getAllVideos: async (req, res) => {
     try {
@@ -142,6 +143,7 @@ const videosController = {
           response
         );
       });
+
 
       res.json(updatedVideo);
     } catch (error) {
