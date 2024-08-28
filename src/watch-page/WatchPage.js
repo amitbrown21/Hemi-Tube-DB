@@ -90,10 +90,18 @@ function WatchPage({
   useEffect(() => {
     const incrementViews = async () => {
       try {
+        // Construct the request body or query string based on your server's needs
         const response = await fetch(
           `http://localhost:3000/api/videos/${videoID}/incrementViews`,
           {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`, // Optional, if user is logged in
+            },
+            body: JSON.stringify({
+              userId: currentUser ? currentUser._id : "Guest", // Send the currentUser ID or 'Guest'
+            }),
           }
         );
 
@@ -109,7 +117,7 @@ function WatchPage({
     };
 
     incrementViews();
-  }, [videoID]);
+  }, [videoID, currentUser]);
 
   const updateVideoData = async (data) => {
     try {

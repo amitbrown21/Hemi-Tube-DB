@@ -1,25 +1,25 @@
 const videosServices = require("../services/videosServices");
-const net = require('net');
+const net = require("net");
 
 const CPP_SERVER_PORT = 5557;
-const CPP_SERVER_HOST = 'localhost';
+const CPP_SERVER_HOST = "localhost";
 
 const sendToCppServer = (message) => {
   return new Promise((resolve, reject) => {
     const client = new net.Socket();
     client.connect(CPP_SERVER_PORT, CPP_SERVER_HOST, () => {
-      console.log('Connected to C++ server');
+      console.log("Connected to C++ server");
       client.write(message);
     });
 
-    client.on('data', (data) => {
-      console.log('Received from C++ server:', data.toString());
+    client.on("data", (data) => {
+      console.log("Received from C++ server:", data.toString());
       client.destroy();
       resolve(data.toString());
     });
 
-    client.on('error', (err) => {
-      console.error('Error connecting to C++ server:', err);
+    client.on("error", (err) => {
+      console.error("Error connecting to C++ server:", err);
       reject(err);
     });
   });
@@ -123,18 +123,21 @@ const videosController = {
   incrementViews: async (req, res) => {
     try {
       const videoId = req.params.pid;
+      const userId = req.body.userId || "Guest"; // Use the userId from the request or 'Guest'
+
       const updatedVideo = await videosServices.incrementViews(videoId);
-      
+
       // Send message to C++ server
-      const message = `Video ${videoId} was watched`;
+      const message = `User ${userId} watched Video ${videoId}`;
       const response = await sendToCppServer(message);
-      console.log('C++ server response:', response);
+      console.log("C++ server response:", response);
 
       res.json(updatedVideo);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   },
+
   incrementLikes: async (req, res) => {
     try {
       const videoId = req.params.pid;
