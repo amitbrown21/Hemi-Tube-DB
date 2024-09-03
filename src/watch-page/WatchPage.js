@@ -15,6 +15,7 @@ function WatchPage({
   const { videoID } = useParams(); // Extract videoID from URL
   const [videoData, setVideoData] = useState(null);
   const [comments, setComments] = useState([]);
+  const [recommendedVideos, setRecommendedVideos] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -84,13 +85,30 @@ function WatchPage({
       }
     };
 
+    const fetchRecommendations = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/videos/${videoID}/recommendations?userId=${currentUser ? currentUser._id : 'Guest'}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch recommendations");
+        }
+
+        const recommendations = await response.json();
+        setRecommendedVideos(recommendations);
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+      }
+    };
+
     fetchVideoDataAndComments();
-  }, [videoID]);
+    fetchRecommendations();
+  }, [videoID, currentUser]);
 
   useEffect(() => {
     const incrementViews = async () => {
       try {
-        // Construct the request body or query string based on your server's needs
         const response = await fetch(
           `http://localhost:3000/api/videos/${videoID}/incrementViews`,
           {
@@ -186,7 +204,7 @@ function WatchPage({
           </div>
         </div>
         <div className={`side-list ${isDarkMode ? "dark-mode" : ""}`}>
-          <SideList videos={videos} setCurrentVideo={setCurrentVideo} />
+          <SideList videos={recommendedVideos} setCurrentVideo={setCurrentVideo} />
         </div>
       </div>
     </div>

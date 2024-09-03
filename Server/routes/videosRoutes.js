@@ -10,5 +10,6 @@ router.post("/:pid/incrementDislikes", videosController.incrementDislikes);
 router.post("/:pid/decrementDislikes", videosController.decrementDislikes);
 router.get("/all", videosController.getAllVideos);
 router.get("/:pid", videosController.getVideoById);
+router.get("/:pid/recommendations", videosController.getRecommendations);
 
 module.exports = router;
