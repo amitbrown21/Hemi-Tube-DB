@@ -33,6 +33,12 @@ void updateWatchPatterns(const string& userId, const string& watchedVideo) {
     videoWatchPatterns[watchedVideo];
 }
 
+void handle_init_command(const string& videoId) {
+    // Initialize the video in the popularity and watch patterns if necessary
+    videoPopularity[videoId] = 0;
+    videoWatchPatterns[videoId]; // Ensure the video has an entry in the map
+}
+
 vector<string> getRecommendations(const string& watchedVideo) {
     vector<pair<string, int>> recommendations;
 
@@ -93,10 +99,15 @@ void handle_client(int client_sock) {
             cout << "Received from Node.js server: " << buffer << endl;
 
             stringstream ss(buffer);
-            string command, userId, watchedVideo;
+            string command, userId, videoId, watchedVideo;
             ss >> command >> userId >> watchedVideo;
 
-            if (command == "WATCH") {
+            if (command == "INIT") {
+                while (ss >> videoId) {
+                    handle_init_command(videoId);
+                    cout << "Initialized video: " << videoId << endl;
+                }
+            }else if (command == "WATCH") {
                 // Update the watch patterns and popularity
                 updateWatchPatterns(userId, watchedVideo);
             } else if (command == "RECOMMEND") {
