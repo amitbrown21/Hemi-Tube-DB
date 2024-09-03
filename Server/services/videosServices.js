@@ -98,6 +98,10 @@ const getVideosWithTopAndRandom = async () => {
     topVideos,
     otherVideos: remainingVideos.slice(0, 10), // Return only 10 random videos
   };
+  
+};
+const getVideosByIds = async (ids) => {
+  return await Video.find({ _id: { $in: ids } }).populate("owner", "username");
 };
 
 module.exports = {
@@ -112,4 +116,5 @@ module.exports = {
   incrementDislikes,
   decrementDislikes,
   getVideosWithTopAndRandom,
+  getVideosByIds,
 };

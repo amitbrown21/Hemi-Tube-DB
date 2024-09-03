@@ -210,6 +210,32 @@ const videosController = {
       res.status(500).json({ message: error.message });
     }
   },
+  getRecommendations: async (req, res) => {
+    try {
+      const videoId = req.params.pid;
+      const userId = req.query.userId || "Guest";
+
+      sendToCppServer(userId, videoId, "RECOMMEND", (response) => {
+        console.log("Response from C++ server for recommendations:", response);
+        
+        // Parse the response to extract video IDs
+        const videoIds = response.split(':')[1].trim().split(' ').filter(id => id);
+        
+        // Fetch full video data for these IDs
+        videosServices.getVideosByIds(videoIds)
+          .then(recommendedVideos => {
+            res.json(recommendedVideos);
+          })
+          .catch(error => {
+            console.error("Error fetching recommended videos:", error);
+            res.status(500).json({ message: "Error fetching recommended videos" });
+          });
+      });
+    } catch (error) {
+      console.error("Error getting recommendations:", error);
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
 
 module.exports = videosController;
