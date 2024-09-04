@@ -9,15 +9,18 @@ Go back to Server/ and run server.js
 ![alt text](pic4.png)
 
 then go to the project folder and type npm start
+
 ![alt text](pic5.png)
 
 Press Y
+
 ![alt text](pic6.png)
 
 Now youtube is running, this is how it looks:
 ![alt text](pic7.png)
 
 In the top right there is a Login button, click it to login.
+
 ![alt text](pic8.png)
 
 Now to register, click Sign up and fill out the form, including a profile picture
