@@ -15,14 +15,31 @@ const SideList = ({ videos = [], setCurrentVideo }) => {
           if (!response.ok) {
             throw new Error("Failed to fetch additional videos");
           }
+
           const additionalVideos = await response.json();
-          setDisplayVideos([...videos, ...additionalVideos]);
+
+          // Ensure additionalVideos is an array before using it
+          if (Array.isArray(additionalVideos)) {
+            // Introduce a delay before updating the state
+            setTimeout(() => {
+              setDisplayVideos([...videos, ...additionalVideos]);
+            }, 1000); // 1000ms = 1 second delay
+          } else {
+            console.error(
+              "Additional videos is not an array:",
+              additionalVideos
+            );
+            setDisplayVideos(videos);
+          }
         } catch (error) {
           console.error("Error fetching additional videos:", error);
           setDisplayVideos(videos);
         }
       } else {
-        setDisplayVideos(videos.slice(0, 10));
+        // Introduce a delay before setting the displayVideos state
+        setTimeout(() => {
+          setDisplayVideos(videos.slice(0, 10));
+        }, 1000); // 1000ms = 1 second delay
       }
     };
 

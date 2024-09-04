@@ -88,7 +88,9 @@ function WatchPage({
     const fetchRecommendations = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/videos/${videoID}/recommendations?userId=${currentUser ? currentUser._id : 'Guest'}`
+          `http://localhost:3000/api/videos/${videoID}/recommendations?userId=${
+            currentUser ? currentUser._id : "Guest"
+          }`
         );
 
         if (!response.ok) {
@@ -204,7 +206,10 @@ function WatchPage({
           </div>
         </div>
         <div className={`side-list ${isDarkMode ? "dark-mode" : ""}`}>
-          <SideList videos={recommendedVideos} setCurrentVideo={setCurrentVideo} />
+          <SideList
+            videos={recommendedVideos}
+            setCurrentVideo={setCurrentVideo}
+          />
         </div>
       </div>
     </div>

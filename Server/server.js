@@ -3,6 +3,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const usersRoutes = require("./routes/usersRoutes");
 const videosRoutes = require("./routes/videosRoutes");
+const net = require("net");
+const videosServices = require("./services/videosServices");
 
 const app = express();
 
@@ -41,5 +43,39 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// Function to send all videos to the C++ server
+function initializeCppServerWithVideos(videos) {
+  const client = new net.Socket();
+  const message = `INIT ${videos.map((video) => video._id).join(" ")}`;
+
+  client.connect(5557, "127.0.0.1", () => {
+    console.log("Sending all videos to C++ server:", message);
+    client.write(message);
+  });
+
+  client.on("data", (data) => {
+    console.log("Received from C++ server:", data.toString());
+    client.destroy(); // Close the connection after receiving a response
+  });
+
+  client.on("error", (err) => {
+    console.error("Error communicating with C++ server:", err);
+  });
+
+  client.on("close", () => {
+    console.log("Connection to C++ server closed");
+  });
+}
+
+// Fetch all videos from the database and send to the C++ server
+(async () => {
+  try {
+    const allVideos = await videosServices.getVideos();
+    initializeCppServerWithVideos(allVideos);
+  } catch (error) {
+    console.error("Error initializing C++ server with videos:", error);
+  }
+})();
 
 module.exports = app;
